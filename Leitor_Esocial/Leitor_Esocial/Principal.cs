@@ -1,4 +1,5 @@
-﻿using OnContabilLibrary.Models.Sistema;
+﻿using Bilbliotecas.processos;
+using OnContabilLibrary.Models.Sistema;
 using System;
 using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
@@ -9,12 +10,11 @@ namespace Leitor_Esocial
     public partial class Principal : Form
     {
         //variáveis do sistema
-        private string enderecoWebService = "http://app.oncontabil.com.br/webService_v1/server";
         private X509Certificate2 certificado;
         private bool arrastando;
         private Point arrastando_cursor;
         private Point arrastando_form;
-
+        private ESocialProcesso processo;
 
         //para fins de teste sem API
         private FolderBrowserDialog dlgDiretorioESocial;
@@ -24,13 +24,28 @@ namespace Leitor_Esocial
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
-
+            iniciarProcessos();
             //para fins de teste sem API
             this.dlgDiretorioESocial = new FolderBrowserDialog();
         }
 
 
         //=============/ METODOS MANUAIS /===============//
+        
+        private void iniciarProcessos()
+        {
+            if(processo == null)
+            {
+                //processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal);
+            }
+            else
+            {
+                //if(processo.Thread.IsAlive == false)
+                //{
+                //    processo.Thread.Start();
+                //}
+            }
+        }
 
         private void fecharAplicacao(object sender, EventArgs e)
         {
@@ -227,15 +242,16 @@ namespace Leitor_Esocial
             {
                 string pedido = "Entre com a senha do certificado";
                 X509Certificate2 certificado = CertificadoDigital.ListareObterDoRepositorio();
-                if (ExtensaoCertificadoDigital.IsA3(certificado) == false)
-                    throw new Exception("O certificado especificado não corresponde à um certificado A3");
                 string senha_a3 = Prompt.ShowDialog(pedido, "");
                 CertificadoDigital.getA3Certificado(certificado.SerialNumber, senha_a3);
                 this.certificado = certificado;
                 MessageBox.Show("O certificado foi configurado com êxito");
             } catch(Exception ex)
             {
-                MessageBox.Show("Erro ao obter certificado: " + ex.Message);
+                if(ex.Message.Contains("Nome do parâmetro: index"))
+                    MessageBox.Show("Certificado não selecionado.");
+                else 
+                    MessageBox.Show("Erro ao obter certificado: " + ex.Message);
             }
         }
     }

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-
+using System.Windows.Forms;
 
 namespace OnContabilLibrary.Models.Sistema
 {
@@ -146,20 +145,24 @@ namespace OnContabilLibrary.Models.Sistema
         /// <returns></returns>
         public static X509Certificate2 ListareObterDoRepositorio()
         {
-            var store = ObterX509Store(OpenFlags.OpenExistingOnly | OpenFlags.ReadOnly);
-            var collection = store.Certificates;
-            var fcollection = collection.Find(X509FindType.FindByTimeValid, DateTime.Now, true);
-            var scollection = X509Certificate2UI.SelectFromCollection(fcollection, "Certificados válidos:", "Selecione o certificado que deseja usar",
-                X509SelectionFlag.SingleSelection);
+            X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
 
-            if (scollection.Count == 0)
-            {
-                throw new Exception("Nenhum certificado foi selecionado!");
-            }
+            X509Certificate2Collection certs = X509Certificate2UI.SelectFromCollection(
+            store.Certificates , "Selecionar certificado", "Selecione um certificado para utilizar na assinatura do ESocial:"
+            , X509SelectionFlag.MultiSelection);
 
+                
             store.Close();
-            return scollection[0];
+            if(certs[0] == null)
+            {
+                throw new Exception("Nenhum certificado selecionado.");
+            }
+            return certs[0];
         }
+
+
+
 
         public static X509Certificate2 getA3Certificado(string serialCertificado, string senha)
         {
