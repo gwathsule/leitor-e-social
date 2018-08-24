@@ -34,6 +34,8 @@
             this.btnAjuda = new System.Windows.Forms.PictureBox();
             this.btnFechar = new System.Windows.Forms.PictureBox();
             this.pnNFeEntrada = new System.Windows.Forms.Panel();
+            this.btn_cnf_certificado = new System.Windows.Forms.Button();
+            this.eSocialDataGrid = new System.Windows.Forms.DataGridView();
             this.btn_folder_esocial = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.icon_principal = new System.Windows.Forms.NotifyIcon(this.components);
@@ -41,7 +43,6 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
-            this.eSocialDataGrid = new System.Windows.Forms.DataGridView();
             this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
@@ -90,6 +91,7 @@
             // 
             // pnNFeEntrada
             // 
+            this.pnNFeEntrada.Controls.Add(this.btn_cnf_certificado);
             this.pnNFeEntrada.Controls.Add(this.eSocialDataGrid);
             this.pnNFeEntrada.Controls.Add(this.btn_folder_esocial);
             this.pnNFeEntrada.Controls.Add(this.label1);
@@ -97,6 +99,29 @@
             this.pnNFeEntrada.Name = "pnNFeEntrada";
             this.pnNFeEntrada.Size = new System.Drawing.Size(810, 428);
             this.pnNFeEntrada.TabIndex = 3;
+            // 
+            // btn_cnf_certificado
+            // 
+            this.btn_cnf_certificado.Location = new System.Drawing.Point(515, 7);
+            this.btn_cnf_certificado.Name = "btn_cnf_certificado";
+            this.btn_cnf_certificado.Size = new System.Drawing.Size(137, 23);
+            this.btn_cnf_certificado.TabIndex = 4;
+            this.btn_cnf_certificado.Text = "Configurar Certificado";
+            this.btn_cnf_certificado.UseVisualStyleBackColor = true;
+            this.btn_cnf_certificado.Click += new System.EventHandler(this.btn_cnf_certificado_Click);
+            // 
+            // eSocialDataGrid
+            // 
+            this.eSocialDataGrid.AllowUserToDeleteRows = false;
+            this.eSocialDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.eSocialDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id,
+            this.status});
+            this.eSocialDataGrid.Location = new System.Drawing.Point(0, 35);
+            this.eSocialDataGrid.Name = "eSocialDataGrid";
+            this.eSocialDataGrid.ReadOnly = true;
+            this.eSocialDataGrid.Size = new System.Drawing.Size(805, 388);
+            this.eSocialDataGrid.TabIndex = 3;
             // 
             // btn_folder_esocial
             // 
@@ -156,24 +181,12 @@
             this.panel10.Size = new System.Drawing.Size(2, 470);
             this.panel10.TabIndex = 46;
             // 
-            // eSocialDataGrid
-            // 
-            this.eSocialDataGrid.AllowUserToDeleteRows = false;
-            this.eSocialDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.eSocialDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id,
-            this.status});
-            this.eSocialDataGrid.Location = new System.Drawing.Point(0, 35);
-            this.eSocialDataGrid.Name = "eSocialDataGrid";
-            this.eSocialDataGrid.ReadOnly = true;
-            this.eSocialDataGrid.Size = new System.Drawing.Size(805, 388);
-            this.eSocialDataGrid.TabIndex = 3;
-            // 
             // id
             // 
-            this.id.HeaderText = "id";
+            this.id.HeaderText = "saida";
             this.id.Name = "id";
             this.id.ReadOnly = true;
+            this.id.Width = 660;
             // 
             // status
             // 
@@ -221,6 +234,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_folder_esocial;
         private System.Windows.Forms.DataGridView eSocialDataGrid;
+        private System.Windows.Forms.Button btn_cnf_certificado;
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn status;
     }

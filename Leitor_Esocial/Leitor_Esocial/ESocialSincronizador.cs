@@ -1,24 +1,22 @@
 ﻿using Bilbliotecas.controlador;
-using Bilbliotecas.modelo;
 using Bilbliotecas.sincronizador;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Leitor_Esocial
 {
     class ESocialSincronizador : Sincronizador
     {
         private Principal janela_principal;
-        private Assinador assinador;
+        private X509Certificate2 certificado;
 
-        public ESocialSincronizador(string path, Principal janela_principal, Assinador assinador) : base(path)
+        public ESocialSincronizador(string path, Principal janela_principal, X509Certificate2 certificado) : base(path)
         {
             this.janela_principal = janela_principal;
-            this.assinador = assinador;
+            this.certificado = certificado;
         }
 
         public override void arquivoAlterado(string path_file)
@@ -31,8 +29,16 @@ namespace Leitor_Esocial
             try
             {
                 ESocialControl controlador = new ESocialControl(path_file);
-                controlador.assinarXML(this.assinador);
-                this.janela_principal.adicionarLinhaTabelaExternamente(path_file, "assinada");
+                string[] partes = path_file.Split('\\');
+                if (Directory.Exists(@"C:\saida_esocial") == false)
+                {
+                    Directory.CreateDirectory(@"C:\saida_esocial");
+                }
+
+
+                XmlDocument xml_assinado = controlador.assinarXML(this.certificado);
+                xml_assinado.Save(@"C:\saida_esocial\" + partes[partes.Length - 1]);
+                this.janela_principal.adicionarLinhaTabelaExternamente(@"C:\saida_esocial\" + partes[partes.Length - 1], "assinada");
             } catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

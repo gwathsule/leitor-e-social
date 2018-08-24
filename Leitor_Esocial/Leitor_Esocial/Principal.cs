@@ -1,15 +1,7 @@
-﻿using Bilbliotecas.modelo;
-using Bilbliotecas.sincronizador;
+﻿using OnContabilLibrary.Models.Sistema;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Deployment.Application;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace Leitor_Esocial
@@ -18,7 +10,7 @@ namespace Leitor_Esocial
     {
         //variáveis do sistema
         private string enderecoWebService = "http://app.oncontabil.com.br/webService_v1/server";
-        private Assinador assinador;
+        private X509Certificate2 certificado;
         private bool arrastando;
         private Point arrastando_cursor;
         private Point arrastando_form;
@@ -35,7 +27,6 @@ namespace Leitor_Esocial
 
             //para fins de teste sem API
             this.dlgDiretorioESocial = new FolderBrowserDialog();
-            this.iniciarSicronizador(@"E:\Rafael Projetos\esocial\teste");
         }
 
 
@@ -71,7 +62,7 @@ namespace Leitor_Esocial
 
         private void iniciarSicronizador(string caminho)
         {
-            this.sincronizador = new ESocialSincronizador(caminho, this, this.assinador);
+            this.sincronizador = new ESocialSincronizador(caminho, this, certificado);
         }
 
         private void abrirInterface(object sender, EventArgs e)
@@ -213,11 +204,64 @@ namespace Leitor_Esocial
 
         private void btn_folder_esocial_Click(object sender, EventArgs e)
         {
-            if (this.dlgDiretorioESocial.ShowDialog() == DialogResult.OK)
+            if (this.certificado != null)
             {
-                string caminho = this.dlgDiretorioESocial.SelectedPath;
-                this.iniciarSicronizador(caminho);
+                if (this.dlgDiretorioESocial.ShowDialog() == DialogResult.OK)
+                {
+                    string caminho = this.dlgDiretorioESocial.SelectedPath;
+                    this.iniciarSicronizador(caminho);
+                } else
+                {
+                    this.iniciarSicronizador(@"E:\Rafael Projetos\esocial\teste");
+                }
             }
+            else
+            {
+                MessageBox.Show("Antes de iniciar, configure o certificado A3");
+            }
+        }
+
+        private void btn_cnf_certificado_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string pedido = "Entre com a senha do certificado";
+                X509Certificate2 certificado = CertificadoDigital.ListareObterDoRepositorio();
+                if (ExtensaoCertificadoDigital.IsA3(certificado) == false)
+                    throw new Exception("O certificado especificado não corresponde à um certificado A3");
+                string senha_a3 = Prompt.ShowDialog(pedido, "");
+                CertificadoDigital.getA3Certificado(certificado.SerialNumber, senha_a3);
+                this.certificado = certificado;
+                MessageBox.Show("O certificado foi configurado com êxito");
+            } catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao obter certificado: " + ex.Message);
+            }
+        }
+    }
+
+    public static class Prompt
+    {
+        public static string ShowDialog(string pedido, string defaut_value_text)
+        {
+            Form prompt = new Form();
+            prompt.StartPosition = FormStartPosition.CenterParent;
+            prompt.FormBorderStyle = FormBorderStyle.Sizable;
+            prompt.MaximizeBox = false;
+            prompt.MinimizeBox = false;
+            prompt.Width = 330;
+            prompt.Height = 140;
+            prompt.Text = "";
+            Label textLabel = new Label() { Left = 5, Top = 5, Text = pedido, Width = 320 };
+            TextBox inputBox = new TextBox() { Left = 5, Top = 40, Width = 305, Text = defaut_value_text };
+            inputBox.PasswordChar = '*';
+            Button confirmation = new Button() { Text = "Ok", Left = 125, Width = 75, Top = 70 };
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(inputBox);
+            prompt.ShowDialog();
+            return inputBox.Text;
         }
     }
 }
