@@ -13,9 +13,9 @@ namespace DataBase.dao
     {
         private const string nome_bd = "database";
         //private const string senha_bd = "OnContabil#2018";
-        private const int versao_atual = 2;
+        private const int versao_atual = 0;
 
-        private string pasta_db = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"OnContabil") + @"\database";
+        private string pasta_db = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"AssinadorESocial") + @"\database";
         private string path;
         private string str_conn;
         public SQLiteConnection Conector { get; private set; }
@@ -111,16 +111,12 @@ namespace DataBase.dao
                     "CREATE TABLE ESocial(" +
                         "id                         INTEGER             PRIMARY KEY     AUTOINCREMENT," +
                         "id_servidor                INTEGER             NOT NULL," +
+                        "id_empresa                 INTEGER             NOT NULL," +
                         "status                     INTEGER             NOT NULL," +
-                        "data_emissao               DATETIME            NOT NULL," +
-                        "cnpj                       CHAR (14)           NOT NULL        UNIQUE," +
-                        "webService                 VARCHAR (255)       NOT NULL," +
-                        "monitorarNFeEntrada        INTEGER             NOT NULL," +
-                        "monitorarNFeEmitida        INTEGER             NOT NULL," +
-                        "monitorarNFCeEmitida       INTEGER             NOT NULL," +
-                        "monitorarCTe               INTEGER             NOT NULL" +
+                        "ambiente                   INTEGER             NOT NULL," +
+                        "data                       DATETIME            NOT NULL," +
+                        "xml_base64                 TEXT" +
                     ")";
-
                 efetuarMigracao(comando_sql, versao_bd);
                 return;
             }
@@ -128,18 +124,6 @@ namespace DataBase.dao
             if (versao_bd == 1)
             {
                 //alterações da versao 1
-                return;
-            }
-
-            if (versao_bd == 2)
-            {
-                //alterações da versao 2
-                return;
-            }
-
-            if (versao_bd == 3)
-            {
-                //alterações da versao 3
                 return;
             }
 

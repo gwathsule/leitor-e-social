@@ -68,7 +68,9 @@
   <ItemGroup>
     <Compile Include="Contando\ConexaoContando.cs" />
     <Compile Include="Contando\MetodosContando.cs" />
+    <Compile Include="Esocial\BasicHttpsBinding.cs" />
     <Compile Include="Esocial\ConexaoEsocial.cs" />
+    <Compile Include="Esocial\EndpointAddress.cs" />
     <Compile Include="Esocial\MetodosEsocial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -18,13 +18,11 @@ namespace Leitor_Esocial
 
         //para fins de teste sem API
         private FolderBrowserDialog dlgDiretorioESocial;
-        private ESocialSincronizador sincronizador;
 
         public Principal()
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
-            iniciarProcessos();
             //para fins de teste sem API
             this.dlgDiretorioESocial = new FolderBrowserDialog();
         }
@@ -36,14 +34,18 @@ namespace Leitor_Esocial
         {
             if(processo == null)
             {
-                //processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal);
+                processo = new ESocialProcesso(this.certificado, "Processo ESocial", 5, this.icon_principal);
             }
             else
             {
-                //if(processo.Thread.IsAlive == false)
-                //{
-                //    processo.Thread.Start();
-                //}
+                if(processo.Thread.IsAlive == false)
+                {
+                    try
+                    {
+                        processo.Thread.Abort();
+                    }catch(Exception){}
+                    processo.Thread.Start();
+                }
             }
         }
 
@@ -73,11 +75,6 @@ namespace Leitor_Esocial
                 this.Invoke(new Action(() => adicionarLinhaTabela(id, status)));
                 return;
             }
-        }
-
-        private void iniciarSicronizador(string caminho)
-        {
-            this.sincronizador = new ESocialSincronizador(caminho, this, certificado);
         }
 
         private void abrirInterface(object sender, EventArgs e)
@@ -221,14 +218,7 @@ namespace Leitor_Esocial
         {
             if (this.certificado != null)
             {
-                if (this.dlgDiretorioESocial.ShowDialog() == DialogResult.OK)
-                {
-                    string caminho = this.dlgDiretorioESocial.SelectedPath;
-                    this.iniciarSicronizador(caminho);
-                } else
-                {
-                    this.iniciarSicronizador(@"E:\Rafael Projetos\esocial\teste");
-                }
+                iniciarProcessos();
             }
             else
             {

@@ -11,27 +11,23 @@ using System.Xml.Linq;
 
 namespace Bilbliotecas.controlador
 {
-    public class ESocialControl
+    public static class ESocialControl
     {
-        private string path_xml;
 
-        public ESocialControl(string path_xml)
-        {
-            this.path_xml = path_xml;
-        }
-
-        public XmlDocument assinarXML(X509Certificate2 certificado)
+        public static XmlDocument assinarXML(X509Certificate2 certificado, string xml_base64)
         {
             try
             {
-                string xml_str = File.ReadAllText(path_xml);
+
+                byte[] data = Convert.FromBase64String(xml_base64);
+                string xml_str = Encoding.UTF8.GetString(data);
 
                 xml_str = xml_str.Replace("<v1:", "<");
                 xml_str = xml_str.Replace("</v1:", "</");
                 xml_str = xml_str.Replace("<V1:", "<");
                 xml_str = xml_str.Replace("</V1:", "</");
 
-                XmlDocument xml_assinado = this.assinarEsocial(certificado, xml_str);
+                XmlDocument xml_assinado = assinarEsocial(certificado, xml_str);
 
                 return xml_assinado;
             } catch (Exception ex)
@@ -43,7 +39,7 @@ namespace Bilbliotecas.controlador
         /// <summary>
         /// Utiliza o certificado digital do cliente para assinar as tags "infEvento" do xml passado como parametro
         /// </summary>
-        private XmlDocument assinarEsocial(X509Certificate2 certificado, string envelope_evento)
+        private static XmlDocument assinarEsocial(X509Certificate2 certificado, string envelope_evento)
         {
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(envelope_evento);

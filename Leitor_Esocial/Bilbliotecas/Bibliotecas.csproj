@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="app\ESocialApp.cs" />
     <Compile Include="controlador\ESocialControl.cs" />
     <Compile Include="modelo\CertificadoDigital.cs" />
     <Compile Include="modelo\ESocial.cs" />
@@ -98,6 +99,10 @@
     <Compile Include="sincronizador\Sincronizador.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataBase\DataBase.csproj">
+      <Project>{9268E553-0307-447E-A966-ED23A52104BA}</Project>
+      <Name>DataBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebServices\WebServices.csproj">
       <Project>{7d48a01b-c87b-40c9-88f8-a6b0c67eabe4}</Project>
       <Name>WebServices</Name>
