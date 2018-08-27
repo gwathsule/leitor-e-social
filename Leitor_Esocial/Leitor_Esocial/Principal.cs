@@ -1,5 +1,4 @@
 ﻿using Bilbliotecas.processos;
-using OnContabilLibrary.Models.Sistema;
 using System;
 using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
@@ -15,6 +14,7 @@ namespace Leitor_Esocial
         private Point arrastando_cursor;
         private Point arrastando_form;
         private ESocialProcesso processo;
+        private ModalConfig modal_config;
 
         //para fins de teste sem API
         private FolderBrowserDialog dlgDiretorioESocial;
@@ -25,6 +25,7 @@ namespace Leitor_Esocial
             InitializeComponent();
             //para fins de teste sem API
             this.dlgDiretorioESocial = new FolderBrowserDialog();
+            this.modal_config = new ModalConfig();
         }
 
 
@@ -228,46 +229,8 @@ namespace Leitor_Esocial
 
         private void btn_cnf_certificado_Click(object sender, EventArgs e)
         {
-            try
-            {
-                string pedido = "Entre com a senha do certificado";
-                X509Certificate2 certificado = CertificadoDigital.ListareObterDoRepositorio();
-                string senha_a3 = Prompt.ShowDialog(pedido, "");
-                CertificadoDigital.getA3Certificado(certificado.SerialNumber, senha_a3);
-                this.certificado = certificado;
-                MessageBox.Show("O certificado foi configurado com êxito");
-            } catch(Exception ex)
-            {
-                if(ex.Message.Contains("Nome do parâmetro: index"))
-                    MessageBox.Show("Certificado não selecionado.");
-                else 
-                    MessageBox.Show("Erro ao obter certificado: " + ex.Message);
-            }
-        }
-    }
-
-    public static class Prompt
-    {
-        public static string ShowDialog(string pedido, string defaut_value_text)
-        {
-            Form prompt = new Form();
-            prompt.StartPosition = FormStartPosition.CenterParent;
-            prompt.FormBorderStyle = FormBorderStyle.Sizable;
-            prompt.MaximizeBox = false;
-            prompt.MinimizeBox = false;
-            prompt.Width = 330;
-            prompt.Height = 140;
-            prompt.Text = "";
-            Label textLabel = new Label() { Left = 5, Top = 5, Text = pedido, Width = 320 };
-            TextBox inputBox = new TextBox() { Left = 5, Top = 40, Width = 305, Text = defaut_value_text };
-            inputBox.PasswordChar = '*';
-            Button confirmation = new Button() { Text = "Ok", Left = 125, Width = 75, Top = 70 };
-            confirmation.Click += (sender, e) => { prompt.Close(); };
-            prompt.Controls.Add(confirmation);
-            prompt.Controls.Add(textLabel);
-            prompt.Controls.Add(inputBox);
-            prompt.ShowDialog();
-            return inputBox.Text;
+            this.modal_config.ShowDialog();
+            this.certificado = this.modal_config.Certificado;
         }
     }
 }

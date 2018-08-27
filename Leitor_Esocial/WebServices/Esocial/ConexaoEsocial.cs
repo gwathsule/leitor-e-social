@@ -73,7 +73,7 @@ namespace WebServices.Esocial
             {
                 string envelope = envolope_eventos(eventos_assinados);
                 string respostaServidor = enviarRequisicao(envelope, certificado);
-                return getRetornoServidor(respostaServidor);
+                return respostaServidor;
             }
             catch (Exception e)
             {

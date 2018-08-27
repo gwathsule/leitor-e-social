@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using WebServices.Contando;
@@ -32,18 +33,52 @@ namespace Bilbliotecas.processos
         {
             try
             {
-                //log.log("Iniciando verificação no webservice");
-                //string retorno_servidor = contanto_wb.consultarXmls();
-                //salva os documentos no banco
-                //extrairXmlsRetornoServidor(retorno_servidor);
-                //pega no máximo 15 xmls do banco para assinar
-                List<ESocial> documentos = ESocialApp.getDocumentosNaoProcessados(15);
-                processarDocumentosESocial(documentos);
+                while (true)
+                {
+                    try
+                    {
+                        log.log("Iniciando verificação no webservice");
+                        string retorno_servidor = contanto_wb.consultarXmls();
+                        //salva os documentos no banco
+                        extrairXmlsRetornoServidor(retorno_servidor);
+                        //pega no máximo 15 xmls do banco para assinar
+                        List<ESocial> documentos = ESocialApp.getDocumentosNaoProcessados(15);
+                        if (documentos.Count > 0)
+                        {
+                            log.log(documentos.Count + " encontrados. Iniciando processamento");
+                            processarDocumentosESocial(documentos);
+                            notificao_info(documentos.Count + " novos documentos assinados");
+                        }
+                        else
+                        {
+                            log.log("nenhum documento novo encontrado");
+                        }
+                    } catch(Exception ex)
+                    {
+                        this.log.log("Erro no processo de sicronização: " + ex.Message);
+                        notificao_erro(ex.Message);
+                    }
+
+                    //inicia espera
+                    this.log.log("Iniciando aguardo de " + this.Intervalo_minutos + " antes de iniciar um novo upload");
+                    this.log.log("==========================================//=========================================");
+                    try
+                    {
+                        Thread.Sleep(this.Intervalo_minutos);
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        this.log.log("Processo de " + this.log.Processo + " foi finalizada pelo usuário");
+                        notificao_info("Processo de " + this.log.Processo + " foi finalizada pelo usuário");
+                        return;
+                    }
+                }
 
             }
             catch (Exception ex)
             {
-                log.log("Erro: " + ex.Message);
+                log.log("ERRO CRÍTICO: " + ex.Message);
+                notificao_erro("ERRO CRÍTICO: " + ex.Message);
             }
 
         }
@@ -55,9 +90,14 @@ namespace Bilbliotecas.processos
         {
             foreach(ESocial documento in documentos)
             {
-                //assina documento
+                XmlDocument resposta = new XmlDocument();
+                //assina e envia documento
                 XmlDocument xml_assinado = ESocialControl.assinarXML(certificado, documento.Xml_base64);
                 string resposta_servidor = ConexaoEsocial.processar_eventos(xml_assinado, this.certificado);
+                resposta.LoadXml(resposta_servidor);
+                
+                //tratamento BD
+
                 this.log.log(resposta_servidor);
             }
         }
@@ -106,6 +146,16 @@ namespace Bilbliotecas.processos
             {
                 throw new Exception("Erro extrair os xmls do retorno do servidor: " + ex.Message);
             }
+        }
+
+        private void notificao_erro(string mensagem)
+        {
+            this.Icone_notificao.ShowBalloonTip(3,"Assinador ESocial", "Erro: " + mensagem, ToolTipIcon.Error);
+        }
+
+        private void notificao_info(string mensagem)
+        {
+            this.Icone_notificao.ShowBalloonTip(3, "Assinador ESocial", "Erro: " + mensagem, ToolTipIcon.Info);
         }
 
     }

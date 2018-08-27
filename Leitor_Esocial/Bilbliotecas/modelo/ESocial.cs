@@ -9,10 +9,12 @@ namespace Bilbliotecas.modelo
     {
         /// <summary>
         /// 0 - não assinada | 
-        /// 1 - assinada e processada
+        /// 1 - assinada e processada | 
+        /// 2 - informacao armazenada em nuvem
         /// </summary>
-        public int id { get; private set; }
         public int Status { get; set; }
+
+        public int id { get; private set; }
         public int Id_servidor { get; set; }
         public int Id_empresa { get; set; }
         public int Ambiente { get; set; }

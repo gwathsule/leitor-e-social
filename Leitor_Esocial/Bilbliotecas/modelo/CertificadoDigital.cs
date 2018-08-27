@@ -161,8 +161,51 @@ namespace OnContabilLibrary.Models.Sistema
             return certs[0];
         }
 
+        public static X509Certificate2 getA1CertificadoWindows(string serialCertificado)
+        {
+            try
+            {
+                X509Certificate2 certificado = null;
+                X509Store store = new X509Store("My", StoreLocation.CurrentUser);
+                store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                foreach (X509Certificate2 item in store.Certificates)
+                {
+                    if (item.SerialNumber.EndsWith(serialCertificado, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        certificado = item;
+                        certificado.VerificaValidade();
+                        break;
+                    }
+                }
+                if (certificado == null)
+                    throw new Exception("Certificado não encontrado na lista do windows");
+                return certificado;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao obter certificado do windows: " + ex.Message, ex);
+            }
+        }
 
+        private static bool VerifyPassword(byte[] fileContent, string password)
+        {
+            try
+            {
+                // ReSharper disable once UnusedVariable
+                var certificate = new X509Certificate2(fileContent, password);
+            }
+            catch (CryptographicException ex)
+            {
+                if ((ex.HResult & 0xFFFF) == 0x56)
+                {
+                    return false;
+                };
 
+                throw;
+            }
+
+            return true;
+        }
 
         public static X509Certificate2 getA3Certificado(string serialCertificado, string senha)
         {
