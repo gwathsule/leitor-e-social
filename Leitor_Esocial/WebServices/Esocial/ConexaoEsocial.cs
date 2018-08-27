@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -12,8 +13,12 @@ namespace WebServices.Esocial
 {
     public static class ConexaoEsocial
     {
-        private const string web_service_teste = "https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc";
-        
+        private const string web_service_teste =
+            "https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
+
+        private const string soap_action =
+            "http://www.esocial.gov.br/servicos/empregador/lote/eventos/envio/v1_1_1/ServicoEnviarLoteEventos/EnviarLoteEventos";
+
         //metodos privados
         private static string getRetornoServidor(string repostaServidor)
         {
@@ -39,32 +44,23 @@ namespace WebServices.Esocial
         {
             try
             {
-                ///
-                //string data = "the xml document to submit";
-                string url = web_service_teste;
-                string response = "";
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(data);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                var urlServicoEnvio = web_service_teste;
+                var address = new EndpointAddress(urlServicoEnvio);
+                var binding = new BasicHttpsBinding();  //Disponível desde .NET Framework 4.5
+                                                        // ou:
+                                                        //var binding = new BasicHttpBinding(BasicHttpsSecurityMode.Transport);
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
-                // build request objects to pass the data/xml to the server
-                byte[] buffer = Encoding.ASCII.GetBytes(data);
-                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-                request.Method = "POST";
-                request.ContentType = "text/xml;charset=utf-8";
-                request.ContentLength = buffer.Length;
-                request.ClientCertificates.Add(certificado);
-                Stream post = request.GetRequestStream();
+                var wsClient = new WsEnviarRestrira.ServicoEnviarLoteEventos();
+                wsClient.ClientCertificates.Add(certificado);
 
-                // post data and close connection
-                post.Write(buffer, 0, buffer.Length);
-                post.Close();
-
-                // build response object
-                HttpWebResponse resposta = request.GetResponse() as HttpWebResponse;
-                Stream responsedata = resposta.GetResponseStream();
-                StreamReader responsereader = new StreamReader(responsedata);
-                response = responsereader.ReadToEnd();
-                return response;
+                var retornoEnvioXElement = wsClient.EnviarLoteEventos(xml.DocumentElement);
+                return retornoEnvioXElement.InnerXml;
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
                 throw ex;
             }
@@ -89,12 +85,18 @@ namespace WebServices.Esocial
         {
             string envelope_env = "";
 
-            envelope_env += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.esocial.gov.br/servicos/empregador/lote/eventos/envio/v1_1_0\">";
+            envelope_env += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.esocial.gov.br/servicos/empregador/lote/eventos/envio/v2_4_02\">";
             envelope_env += "<soapenv:Header/>";
             envelope_env += "<soapenv:Body>";
-            envelope_env += eventos_assinados.InnerXml;
+            envelope_env += File.ReadAllText(@"C:\Users\Rafael\Documents\esocial\varios_eventos_assinados.xml");
             envelope_env += "</soapenv:Body>";
             envelope_env += "</soapenv:Envelope>";
+
+
+            envelope_env = envelope_env.TrimEnd();
+            envelope_env = envelope_env.TrimStart();
+
+            envelope_env = envelope_env.Trim();
 
             return envelope_env;
         }

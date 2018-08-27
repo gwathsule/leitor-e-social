@@ -32,10 +32,10 @@ namespace Bilbliotecas.processos
         {
             try
             {
-                log.log("Iniciando verificação no webservice");
-                string retorno_servidor = contanto_wb.consultarXmls();
+                //log.log("Iniciando verificação no webservice");
+                //string retorno_servidor = contanto_wb.consultarXmls();
                 //salva os documentos no banco
-                extrairXmlsRetornoServidor(retorno_servidor);
+                //extrairXmlsRetornoServidor(retorno_servidor);
                 //pega no máximo 15 xmls do banco para assinar
                 List<ESocial> documentos = ESocialApp.getDocumentosNaoProcessados(15);
                 processarDocumentosESocial(documentos);
