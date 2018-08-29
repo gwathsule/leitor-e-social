@@ -86,6 +86,10 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -117,6 +121,18 @@
     <Compile Include="ModalConfig.Designer.cs">
       <DependentUpon>ModalConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalListaEmpresas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalListaEmpresas.Designer.cs">
+      <DependentUpon>ModalListaEmpresas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalLogin.Designer.cs">
+      <DependentUpon>ModalLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Principal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +143,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ModalConfig.resx">
       <DependentUpon>ModalConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalListaEmpresas.resx">
+      <DependentUpon>ModalListaEmpresas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalLogin.resx">
+      <DependentUpon>ModalLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Principal.resx">
       <DependentUpon>Principal.cs</DependentUpon>

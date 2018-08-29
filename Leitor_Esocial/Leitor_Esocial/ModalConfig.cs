@@ -1,4 +1,5 @@
-﻿using OnContabilLibrary.Models.Sistema;
+﻿using Bilbliotecas.controlador;
+using OnContabilLibrary.Models.Sistema;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,14 +15,13 @@ namespace Leitor_Esocial
 {
     public partial class ModalConfig : Form
     {
-        public X509Certificate2 Certificado { get; set; }
-
+        private UsersControl user_control;
         private OpenFileDialog dlgcertificadoArquivoCaminho;
 
-        public ModalConfig()
+        public ModalConfig(UsersControl user_control)
         {
             InitializeComponent();
-
+            this.user_control = user_control;
             this.dlgcertificadoArquivoCaminho = new OpenFileDialog();
             this.dlgcertificadoArquivoCaminho.Title = "Selecione o certificado digital em formato arquivo.";
             this.dlgcertificadoArquivoCaminho.Filter = "Certificados|*.pfx; *.p12" +
@@ -38,7 +38,8 @@ namespace Leitor_Esocial
                     path_arquivo = this.dlgcertificadoArquivoCaminho.FileName;
                 }
                 string senha = Prompt.ShowDialog("Insira a senha do certificado", "");
-                this.Certificado = CertificadoDigital.ObterDeArquivo(path_arquivo, senha);
+                X509Certificate2 certificado = CertificadoDigital.ObterDeArquivo(path_arquivo, senha);
+                user_control.salvarCertificadoUserLogado(certificado, 1, path_arquivo, senha);
                 MessageBox.Show("O certificado foi configurado com êxito");
                 this.Close();
             }
@@ -57,9 +58,14 @@ namespace Leitor_Esocial
                 {
                     string senha = Prompt.ShowDialog("Entre com a senha do certificado", "");
                     certificado = CertificadoDigital.getA3Certificado(certificado.SerialNumber, senha);
+                    certificado.VerificaValidade();
+                    user_control.salvarCertificadoUserLogado(certificado, 3, "", senha);
                 }
-                certificado.VerificaValidade();
-                this.Certificado = certificado;
+                else
+                {
+                    certificado.VerificaValidade();
+                    user_control.salvarCertificadoUserLogado(certificado, 2, "", "");
+                }
                 MessageBox.Show("O certificado foi configurado com êxito");
                 this.Close();
             }

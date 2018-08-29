@@ -4,7 +4,6 @@ using Bilbliotecas.modelo;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
@@ -15,18 +14,19 @@ namespace Bilbliotecas.processos
 {
     public class ESocialProcesso : Processo
     {
-        Logs log;
-        ConexaoContando contanto_wb;
-        X509Certificate2 certificado;
+        private Logs log;
+        private ConexaoContando contanto_wb;
+        public User user { get; set; }
 
-        public ESocialProcesso(X509Certificate2 certificado, string nome_processo, int intervalo, NotifyIcon icone_notificacao) : 
+        public ESocialProcesso(string nome_processo, int intervalo, NotifyIcon icone_notificacao, User user) : 
             base(nome_processo, intervalo, icone_notificacao)
         {
-            this.certificado = certificado;
+            this.user = user;
             this.contanto_wb = new ConexaoContando();
             this.log = new Logs(nome_processo);
 
             this.Thread.Start();
+            this.notificao_info("processo de assinatura automática iniciada");
         }
 
         public override void run()
@@ -37,22 +37,37 @@ namespace Bilbliotecas.processos
                 {
                     try
                     {
-                        log.log("Iniciando verificação no webservice");
-                        string retorno_servidor = contanto_wb.consultarXmls();
+                        //log.log("Iniciando verificação no webservice");
+                        //string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash);
                         //salva os documentos no banco
-                        extrairXmlsRetornoServidor(retorno_servidor);
-                        //pega no máximo 15 xmls do banco para assinar
-                        List<ESocial> documentos = ESocialApp.getDocumentosNaoProcessados(15);
-                        if (documentos.Count > 0)
+                        //extrairXmlsRetornoServidor(retorno_servidor);
+                        
+                        //pega no máximo 5 xmls do banco para assinar
+                        List<ESocial> documentos_nao_processados = ESocialApp.getDocumentosNaoProcessados(5, user.Id_servidor);
+                        if (documentos_nao_processados.Count > 0)
                         {
-                            log.log(documentos.Count + " encontrados. Iniciando processamento");
-                            processarDocumentosESocial(documentos);
-                            notificao_info(documentos.Count + " novos documentos assinados");
+                            log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
+                            processarDocumentosESocial(documentos_nao_processados);
+                            notificao_info(documentos_nao_processados.Count + " novos documentos assinados");
                         }
                         else
                         {
                             log.log("nenhum documento novo encontrado");
                         }
+
+                        //pega no máximo 10 xmls processados no banco para envio ao servidor
+                        List<ESocial> documentos_processados = ESocialApp.getDocumentosProcessados(10, user.Id_servidor);
+                        if (documentos_processados.Count > 0)
+                        {
+                            log.log(documentos_processados.Count + " processados encontrados. Iniciando envio à nuvem");
+                            subirDocumentosESocial(documentos_processados);
+                            notificao_info(documentos_processados.Count + " novos documentos enviados ao servidor");
+                        }
+                        else
+                        {
+                            log.log("nenhum novo documento processado encontrado");
+                        }
+
                     } catch(Exception ex)
                     {
                         this.log.log("Erro no processo de sicronização: " + ex.Message);
@@ -77,10 +92,40 @@ namespace Bilbliotecas.processos
             }
             catch (Exception ex)
             {
-                log.log("ERRO CRÍTICO: " + ex.Message);
+                    log.log("ERRO CRÍTICO: " + ex.Message);
                 notificao_erro("ERRO CRÍTICO: " + ex.Message);
             }
 
+        }
+
+        private void subirDocumentosESocial(List<ESocial> documentos_processados)
+        {
+            int count = 1;
+            int max = documentos_processados.Count;
+
+            foreach (ESocial documento in documentos_processados)
+            {
+                this.log.log("Subindo " + count + " de " + max + "...");
+
+                //envia informações do documento à nuvem
+                string retorno_servidor = contanto_wb.enviarXmlAssinado(this.user.Id_servidor, this.user.Hash, 
+                    documento.Id_servidor, documento.Xml_base64, documento.Resposta_xml_base64, documento.Ambiente);
+
+                JObject json = JObject.Parse(retorno_servidor);
+
+                int erro = (int)json["erro"];
+                string retorno = (string)json["retorno"];
+
+                this.log.log("Retorno do WB Contando: ");
+                this.log.log("Erro: " + erro);
+                this.log.log("retorno: " + retorno);
+
+                if (erro == 0)
+                {
+                    ESocialApp.marcarComoArmazenadoEmNuvem(documento.id);
+                }
+                count++;
+            }
         }
 
         /// <summary>
@@ -88,17 +133,27 @@ namespace Bilbliotecas.processos
         /// </summary>
         private void processarDocumentosESocial(List<ESocial> documentos)
         {
+            int count = 1;
+            int max = documentos.Count;
+             
             foreach(ESocial documento in documentos)
             {
+                this.log.log("Processando " + count + " de " + max +"...");
                 XmlDocument resposta = new XmlDocument();
                 //assina e envia documento
-                XmlDocument xml_assinado = ESocialControl.assinarXML(certificado, documento.Xml_base64);
-                string resposta_servidor = ConexaoEsocial.processar_eventos(xml_assinado, this.certificado);
+                XmlDocument xml_assinado = ESocialControl.assinarXML(this.user.Certificado, documento.Xml_base64);
+                string resposta_servidor = ConexaoEsocial.processar_eventos(xml_assinado, this.user.Certificado);
                 resposta.LoadXml(resposta_servidor);
-                
-                //tratamento BD
 
-                this.log.log(resposta_servidor);
+                string cdResposta = resposta.GetElementsByTagName("cdResposta").Item(0).InnerText;
+                string descResposta = resposta.GetElementsByTagName("descResposta").Item(0).InnerText;
+                this.log.log("Resposta do servidor: " + cdResposta + " - " + descResposta);
+
+                if (cdResposta.Equals("401"))//201
+                {
+                    ESocialApp.marcarComoProcessado(documento, xml_assinado, resposta);
+                }
+                count++;
             }
         }
 
@@ -111,12 +166,15 @@ namespace Bilbliotecas.processos
         {
             try
             {
+                if(retorno_servidor.Equals(""))
+                {
+                    return;
+                }
                 List<ESocial> documentos = new List<ESocial>();
                 JObject json = JObject.Parse(retorno_servidor);
 
                 int erro = (int)json["erro"];
                 string retorno = (string)json["retorno"];
-                JArray dados = (JArray)json["dados"];
 
                 this.log.log("Retorno do WB Contando: ");
                 this.log.log("Erro: " + erro);
@@ -124,6 +182,7 @@ namespace Bilbliotecas.processos
 
                 if (erro == 0)
                 {
+                    JArray dados = (JArray)json["dados"];
                     this.log.log("Iniciando copia de novos xmls para o banco de dados");
                     foreach (JObject dado in dados)
                     {
@@ -139,7 +198,7 @@ namespace Bilbliotecas.processos
                                                System.Globalization.CultureInfo.InvariantCulture);
 
                         ESocial documento = new ESocial(assinado, id_servidor, ambiente, id_empresa, data, xml_base64);
-                        ESocialApp.novo(documento);
+                        ESocialApp.novo(documento, this.user.Id);
                     }
                 }
             } catch(Exception ex)
@@ -148,6 +207,8 @@ namespace Bilbliotecas.processos
             }
         }
 
+
+
         private void notificao_erro(string mensagem)
         {
             this.Icone_notificao.ShowBalloonTip(3,"Assinador ESocial", "Erro: " + mensagem, ToolTipIcon.Error);
@@ -155,7 +216,7 @@ namespace Bilbliotecas.processos
 
         private void notificao_info(string mensagem)
         {
-            this.Icone_notificao.ShowBalloonTip(3, "Assinador ESocial", "Erro: " + mensagem, ToolTipIcon.Info);
+            this.Icone_notificao.ShowBalloonTip(3, "Assinador ESocial", mensagem, ToolTipIcon.Info);
         }
 
     }

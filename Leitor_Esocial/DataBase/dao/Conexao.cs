@@ -108,14 +108,34 @@ namespace DataBase.dao
             if (versao_bd == 0)
             {
                 comando_sql =
+                    "CREATE TABLE Users(" +
+                        "id                         INTEGER             PRIMARY KEY     AUTOINCREMENT," +
+                        "id_servidor                INTEGER             NOT NULL," +
+                        "nome                       VARCHAR (255)       NOT NULL," +
+                        "hash                       VARCHAR (255)       NOT NULL," +
+                        "email                      VARCHAR (255)       NOT NULL," +
+                        "senha                      VARCHAR (255)       NOT NULL," +
+                        "documento                  CHAR (14)           NOT NULL        UNIQUE," +
+                        "status_certificado         INTEGER             NOT NULL," +
+                        "serial_certificado         VARCHAR (255)," +
+                        "senha_certificado          TEXT," +
+                        "caminho_certificado        TEXT" +
+                    ")";
+
+                efetuarMigracao(comando_sql, versao_bd);
+
+                comando_sql =
                     "CREATE TABLE ESocial(" +
                         "id                         INTEGER             PRIMARY KEY     AUTOINCREMENT," +
+                        "id_user                    INTEGER             NOT NULL," +
                         "id_servidor                INTEGER             NOT NULL," +
                         "id_empresa                 INTEGER             NOT NULL," +
                         "status                     INTEGER             NOT NULL," +
                         "ambiente                   INTEGER             NOT NULL," +
                         "data                       DATETIME            NOT NULL," +
-                        "xml_base64                 TEXT" +
+                        "xml_base64                 TEXT, " +
+                        "resposta_xml_base64        TEXT, " +
+                        "FOREIGN KEY(id_user)       REFERENCES          Users(id)" + 
                     ")";
                 efetuarMigracao(comando_sql, versao_bd);
                 return;

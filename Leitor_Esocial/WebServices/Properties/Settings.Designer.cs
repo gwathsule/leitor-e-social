@@ -33,5 +33,16 @@ namespace WebServices.Properties {
                 return ((string)(this["WebServices_WsEnviarRestrira_ServicoEnviarLoteEventos"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://webservices.envio.esocial.gov.br/servicos/empregador/enviarloteeventos/Ws" +
+            "EnviarLoteEventos.svc")]
+        public string WebServices_WsEnviarProducao_ServicoEnviarLoteEventos {
+            get {
+                return ((string)(this["WebServices_WsEnviarProducao_ServicoEnviarLoteEventos"]));
+            }
+        }
     }
 }

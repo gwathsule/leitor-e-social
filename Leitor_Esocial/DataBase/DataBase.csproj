@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="dao\Conexao.cs" />
     <Compile Include="dao\ESocialDAO.cs" />
+    <Compile Include="dao\UserDAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

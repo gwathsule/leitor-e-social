@@ -89,10 +89,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="app\ESocialApp.cs" />
+    <Compile Include="app\UserApp.cs" />
     <Compile Include="controlador\ESocialControl.cs" />
+    <Compile Include="controlador\UsersControl.cs" />
     <Compile Include="modelo\CertificadoDigital.cs" />
     <Compile Include="modelo\ESocial.cs" />
     <Compile Include="modelo\Logs.cs" />
+    <Compile Include="modelo\User.cs" />
     <Compile Include="processos\ESocialProcesso.cs" />
     <Compile Include="processos\Processo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

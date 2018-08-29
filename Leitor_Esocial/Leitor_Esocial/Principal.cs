@@ -1,4 +1,7 @@
-﻿using Bilbliotecas.processos;
+﻿using Bilbliotecas.controlador;
+using Bilbliotecas.modelo;
+using Bilbliotecas.processos;
+using OnContabilLibrary.Models.Sistema;
 using System;
 using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
@@ -9,12 +12,15 @@ namespace Leitor_Esocial
     public partial class Principal : Form
     {
         //variáveis do sistema
-        private X509Certificate2 certificado;
+        private ESocialProcesso processo;
+        private ModalConfig modal_config;
+        private UsersControl user_control;
+        private ModalLogin modal_login;
+
+        //variáveis form
         private bool arrastando;
         private Point arrastando_cursor;
         private Point arrastando_form;
-        private ESocialProcesso processo;
-        private ModalConfig modal_config;
 
         //para fins de teste sem API
         private FolderBrowserDialog dlgDiretorioESocial;
@@ -23,30 +29,124 @@ namespace Leitor_Esocial
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
+            inicializaAutomatico();
+            atualizaProcessos();
             //para fins de teste sem API
             this.dlgDiretorioESocial = new FolderBrowserDialog();
-            this.modal_config = new ModalConfig();
         }
 
 
         //=============/ METODOS MANUAIS /===============//
         
-        private void iniciarProcessos()
+        private void inicializaAutomatico()
         {
-            if(processo == null)
+            try
             {
-                processo = new ESocialProcesso(this.certificado, "Processo ESocial", 5, this.icon_principal);
+                try
+                {
+                    this.user_control = new UsersControl(true);
+                    if (this.user_control.User_logado != null)
+                    {
+                        if (this.user_control.User_logado.Status_certificado == 1)
+                        {
+                            this.user_control.User_logado.Certificado = new X509Certificate2(this.user_control.User_logado.Caminho_certificado, this.user_control.User_logado.Senha_certificado);
+                        }
+                        else if (this.user_control.User_logado.Status_certificado == 2)
+                        {
+                            this.user_control.User_logado.Certificado = CertificadoDigital.getA1CertificadoWindows(this.user_control.User_logado.Serial_certificado);
+                        }
+                        else if (this.user_control.User_logado.Status_certificado == 3)
+                        {
+                            this.user_control.User_logado.Certificado = CertificadoDigital.getA3Certificado(this.user_control.User_logado.Serial_certificado, this.user_control.User_logado.Senha_certificado);
+                        }
+
+                        if (this.user_control.User_logado.Certificado != null)
+                        {
+                            try
+                            {
+                                this.user_control.User_logado.Certificado.VerificaValidade();
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show("Erro no certificado: " + e.Message);
+                                this.user_control.User_logado.Certificado = null;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar user local: " + ex.Message);
+                    this.user_control = new UsersControl();
+                }
+                this.modal_config = new ModalConfig(this.user_control);
+                this.modal_login = new ModalLogin(this.user_control);
+                atualizarInterface();
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar user local: " + ex.Message);
+            }
+        }
+
+        private void atualizarInterface()
+        {
+            if(user_control.User_logado != null)//usuario logado
+            {
+                btn_login.Text = "Mudar Usuário";
+                lbl_nome_usuario.Text = user_control.User_logado.Nome;
+                if(user_control.User_logado.Certificado != null)
+                {
+                    string nome_cert = user_control.User_logado.Certificado.SubjectName.Name;
+                    if(nome_cert.Length > 30)
+                    {
+                        nome_cert = nome_cert.Substring(0, 29);
+                    }
+                    if (user_control.User_logado.Status_certificado == 1)
+                        lbl_status_certificado.Text = "A1 (Arquivo) - " + nome_cert;
+                    if (user_control.User_logado.Status_certificado == 2)
+                        lbl_status_certificado.Text = "A1 (Windows)- " + nome_cert;
+                    if (user_control.User_logado.Status_certificado == 3)
+                        lbl_status_certificado.Text = "A3 - " + nome_cert;
+                } else
+                {
+                    lbl_status_certificado.Text = "não configurado";
+                }
             }
             else
             {
-                if(processo.Thread.IsAlive == false)
+                lbl_status_sincronizador.Text = "desligado";
+                lbl_status_certificado.Text = "não configurado";
+                lbl_nome_usuario.Text = "nenhum usuário logado";
+            }
+        }
+
+        private void atualizaProcessos()
+        {
+            try
+            {
+                if (this.user_control.User_logado == null || this.user_control.User_logado.Certificado == null)
                 {
-                    try
-                    {
-                        processo.Thread.Abort();
-                    }catch(Exception){}
-                    processo.Thread.Start();
+                    lbl_status_sincronizador.Text = "desligado";
+                    return;
                 }
+
+                if (processo == null)
+                {
+                    processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
+                }
+                else
+                {
+                    if (processo.user.Id_servidor != this.user_control.User_logado.Id_servidor)
+                    {
+                        try { processo.Thread.Abort(); } catch (Exception) { }
+                        processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
+                    }
+                }
+                lbl_status_sincronizador.Text = "em execução";
+            }catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao iniciar processo de assinaturas: " + ex.Message);
+                lbl_status_sincronizador.Text = "desligado";
             }
         }
 
@@ -215,22 +315,23 @@ namespace Leitor_Esocial
             arrastando = false;
         }
 
-        private void btn_folder_esocial_Click(object sender, EventArgs e)
-        {
-            if (this.certificado != null)
-            {
-                iniciarProcessos();
-            }
-            else
-            {
-                MessageBox.Show("Antes de iniciar, configure o certificado A3");
-            }
-        }
-
         private void btn_cnf_certificado_Click(object sender, EventArgs e)
         {
+            if (this.user_control.User_logado == null)
+            {
+                MessageBox.Show("usuário deve estar logado");
+                return;
+            }
             this.modal_config.ShowDialog();
-            this.certificado = this.modal_config.Certificado;
+            atualizarInterface();
+            atualizaProcessos();
+        }
+
+        private void btn_login_Click(object sender, EventArgs e)
+        {
+            this.modal_login.ShowDialog();
+            this.atualizarInterface();
+            atualizaProcessos();
         }
     }
 }

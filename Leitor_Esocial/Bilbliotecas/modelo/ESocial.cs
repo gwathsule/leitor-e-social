@@ -20,6 +20,7 @@ namespace Bilbliotecas.modelo
         public int Ambiente { get; set; }
         public DateTime Data { get; set; }
         public string Xml_base64 { get; set; }
+        public string Resposta_xml_base64 { get; set; }
 
         public ESocial() { }
 
@@ -42,6 +43,18 @@ namespace Bilbliotecas.modelo
             this.Ambiente = ambiente;
             this.Data = data;
             this.Xml_base64 = xml_base64;
+        }
+
+        public ESocial(int id, int status, int id_servidor, int ambiente, int id_empresa, DateTime data, string xml_base64, string resposta_xml_base64)
+        {
+            this.id = id;
+            this.Status = status;
+            this.Id_servidor = id_servidor;
+            this.Id_empresa = id_empresa;
+            this.Ambiente = ambiente;
+            this.Data = data;
+            this.Xml_base64 = xml_base64;
+            this.Resposta_xml_base64 = resposta_xml_base64;
         }
     }
 }

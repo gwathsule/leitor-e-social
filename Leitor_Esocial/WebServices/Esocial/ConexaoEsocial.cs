@@ -16,8 +16,8 @@ namespace WebServices.Esocial
         private const string web_service_teste =
             "https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
 
-        private const string soap_action =
-            "http://www.esocial.gov.br/servicos/empregador/lote/eventos/envio/v1_1_1/ServicoEnviarLoteEventos/EnviarLoteEventos";
+        private const string web_service_producao =
+            "https://webservices.envio.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
 
         //metodos privados
         private static string getRetornoServidor(string repostaServidor)
@@ -47,14 +47,14 @@ namespace WebServices.Esocial
                 XmlDocument xml = new XmlDocument();
                 xml.LoadXml(data);
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-                var urlServicoEnvio = web_service_teste;
+                var urlServicoEnvio = web_service_producao;//mudar para web_service_teste caso estiver testando
                 var address = new EndpointAddress(urlServicoEnvio);
                 var binding = new BasicHttpsBinding();  //Disponível desde .NET Framework 4.5
                                                         // ou:
                                                         //var binding = new BasicHttpBinding(BasicHttpsSecurityMode.Transport);
                 binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
-                var wsClient = new WsEnviarRestrira.ServicoEnviarLoteEventos();
+                var wsClient = new WsEnviarProducao.ServicoEnviarLoteEventos();//WsEnviarRestrira.ServicoEnviarLoteEventos() // para teste
                 wsClient.ClientCertificates.Add(certificado);
 
                 var retornoEnvioXElement = wsClient.EnviarLoteEventos(xml.DocumentElement);
