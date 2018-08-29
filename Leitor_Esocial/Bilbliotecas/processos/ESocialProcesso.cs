@@ -37,23 +37,24 @@ namespace Bilbliotecas.processos
                 {
                     try
                     {
-                        //log.log("Iniciando verificação no webservice");
-                        //string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash);
+                        log.log("Iniciando verificação no webservice");
+                        string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash);
                         //salva os documentos no banco
-                        //extrairXmlsRetornoServidor(retorno_servidor);
+                        extrairXmlsRetornoServidor(retorno_servidor);
                         
                         //pega no máximo 5 xmls do banco para assinar
-                        //List<ESocial> documentos_nao_processados = ESocialApp.getDocumentosNaoProcessados(5, user.Id_servidor);
-                        //if (documentos_nao_processados.Count > 0)
-                        //{
-                        //    log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
-                        //    processarDocumentosESocial(documentos_nao_processados);
-                        //    notificao_info(documentos_nao_processados.Count + " novos documentos assinados");
-                        //}
-                        //else
-                        //{
-                        //    log.log("nenhum documento novo encontrado");
-                        //}
+                        List<ESocial> documentos_nao_processados = ESocialApp.getDocumentosNaoProcessados(5, user.Id_servidor);
+                        if (documentos_nao_processados.Count > 0)
+                        {
+                            log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
+                            int doc_processados = processarDocumentosESocial(documentos_nao_processados);
+                            if(doc_processados > 0 )
+                                notificao_info(doc_processados + " novos documentos processados");
+                        }
+                        else
+                        {
+                            log.log("nenhum documento novo encontrado");
+                        }
 
                         //pega no máximo 10 xmls processados no banco para envio ao servidor
                         List<ESocial> documentos_processados = ESocialApp.getDocumentosProcessados(10, user.Id_servidor);
@@ -129,11 +130,11 @@ namespace Bilbliotecas.processos
         /// <summary>
         /// Processa os documentos assinando-os e enviando a receita
         /// </summary>
-        private void processarDocumentosESocial(List<ESocial> documentos)
+        private int processarDocumentosESocial(List<ESocial> documentos)
         {
             int count = 1;
             int max = documentos.Count;
-             
+            int doc_processado = 0;
             foreach(ESocial documento in documentos)
             {
                 this.log.log("Processando " + count + " de " + max +"...");
@@ -147,12 +148,15 @@ namespace Bilbliotecas.processos
                 string descResposta = resposta.GetElementsByTagName("descResposta").Item(0).InnerText;
                 this.log.log("Resposta do servidor: " + cdResposta + " - " + descResposta);
 
-                if (cdResposta.Equals("401"))//201
+                if (cdResposta.Equals("201"))
                 {
                     ESocialApp.marcarComoProcessado(documento, xml_assinado, resposta);
+                    doc_processado++;
                 }
                 count++;
             }
+
+            return doc_processado;
         }
 
 

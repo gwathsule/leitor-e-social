@@ -127,6 +127,12 @@
     <Compile Include="ModalListaEmpresas.Designer.cs">
       <DependentUpon>ModalListaEmpresas.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalLog.Designer.cs">
+      <DependentUpon>ModalLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModalLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +152,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ModalListaEmpresas.resx">
       <DependentUpon>ModalListaEmpresas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalLog.resx">
+      <DependentUpon>ModalLog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModalLogin.resx">
       <DependentUpon>ModalLogin.cs</DependentUpon>

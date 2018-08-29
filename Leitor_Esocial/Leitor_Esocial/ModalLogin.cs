@@ -28,7 +28,7 @@ namespace Leitor_Esocial
         {
             try
             {
-                JArray retorno = user_control.logar(txt_email.Text, txt_senha.Text, txt_documento.Text);
+                JArray retorno = user_control.logar(txt_email.Text, txt_senha.Text, txt_documento.Text, chk_educont.Checked);
                 modal_lista.atualizaListaEmpresas(retorno);
                 modal_lista.ShowDialog();
                 IDictionary<string, string> empresa_info = modal_lista.getInfoEmpresaSelecionada();

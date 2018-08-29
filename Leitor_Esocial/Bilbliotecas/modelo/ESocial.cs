@@ -56,5 +56,12 @@ namespace Bilbliotecas.modelo
             this.Xml_base64 = xml_base64;
             this.Resposta_xml_base64 = resposta_xml_base64;
         }
+
+        public ESocial(int status, int id_servidor, DateTime data)
+        {
+            this.Status = status;
+            this.Id_servidor = id_servidor;
+            this.Data = data;
+        }
     }
 }

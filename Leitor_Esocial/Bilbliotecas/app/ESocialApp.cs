@@ -52,6 +52,24 @@ namespace Bilbliotecas.app
             }
         }
 
+        public static List<ESocial> getDocumentosUltimosDocumentos(int id_empresa_servidor, int limite)
+        {
+            List<ESocial> documentos = new List<ESocial>();
+            DataSet dados = ESocialDAO.getDocumentos(limite, id_empresa_servidor);
+
+            foreach (DataRow dado in dados.Tables[0].Rows)
+            {
+                int status = Int32.Parse(dado["status"].ToString());
+                int id_servidor = Int32.Parse(dado["id_servidor"].ToString());
+                DateTime data = dado.Field<DateTime>("data");
+
+                ESocial documento = new ESocial(status, id_servidor, data);
+                documentos.Add(documento);
+            }
+
+            return documentos;
+        }
+
         public static void marcarComoProcessado(ESocial documento, XmlDocument xml_assinado, XmlDocument resposta)
         {
             try

@@ -35,7 +35,7 @@
             this.txt_documento = new System.Windows.Forms.TextBox();
             this.lbl_senha = new System.Windows.Forms.Label();
             this.txt_senha = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chk_educont = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btn_logar
@@ -106,22 +106,22 @@
             this.txt_senha.TabIndex = 5;
             this.txt_senha.Text = "12345678";
             // 
-            // checkBox1
+            // chk_educont
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(157, 129);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(79, 17);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "EDUCONT";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chk_educont.AutoSize = true;
+            this.chk_educont.Location = new System.Drawing.Point(157, 129);
+            this.chk_educont.Name = "chk_educont";
+            this.chk_educont.Size = new System.Drawing.Size(79, 17);
+            this.chk_educont.TabIndex = 7;
+            this.chk_educont.Text = "EDUCONT";
+            this.chk_educont.UseVisualStyleBackColor = true;
             // 
             // ModalLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(418, 193);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.chk_educont);
             this.Controls.Add(this.lbl_senha);
             this.Controls.Add(this.txt_senha);
             this.Controls.Add(this.lbl_documento);
@@ -147,6 +147,6 @@
         private System.Windows.Forms.TextBox txt_documento;
         private System.Windows.Forms.Label lbl_senha;
         private System.Windows.Forms.TextBox txt_senha;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chk_educont;
     }
 }

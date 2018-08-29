@@ -41,11 +41,11 @@ namespace Bilbliotecas.controlador
             }
         }
 
-        public JArray logar(string email, string senha, string documento)
+        public JArray logar(string email, string senha, string documento, bool educont)
         {
             try
             {
-                string retorno_servidor = wb_contando.consultarEmpresas(email, senha, documento);
+                string retorno_servidor = wb_contando.consultarEmpresas(email, senha, documento, educont);
                 JObject json = JObject.Parse(retorno_servidor);
                 int erro = (int)json["erro"];
                 string retorno = (string)json["retorno"];

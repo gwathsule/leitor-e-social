@@ -80,6 +80,26 @@ namespace DataBase.dao
             }
         }
 
+        public static DataSet getDocumentos(int limite, int id_empresa_servidor)
+        {
+            string sql_busca =
+                      "SELECT status, id_servidor, data FROM ESocial " +
+                      "WHERE id_empresa = " + id_empresa_servidor + " " +
+                      "ORDER BY data DESC " +
+                      "LIMIT " + limite;
+
+            using (Conexao bd = new Conexao())
+            {
+                DataSet ds = new DataSet();
+                SQLiteCommand cmd = new SQLiteCommand(sql_busca, bd.Conector);
+                cmd.ExecuteNonQuery();
+                SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
+                adapter.Fill(ds);
+
+                return ds;
+            }
+        }
+
         public static DataSet getDocumentosProcessados(int limite, int id_empresa_servidor)
         {
             string sql_busca =

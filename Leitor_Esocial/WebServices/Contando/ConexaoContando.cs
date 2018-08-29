@@ -59,7 +59,7 @@ namespace WebServices.Contando
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(web_service_xmls);
 
                 req.Method = "POST";
-                req.ContentType = "application/x-www-form-urlencoded";
+                req.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
                 strNewValue = "action={0}&id={1}&hash={2}&idRegistro={3}&xml={4}&resposta={5}&ambiente={6}";
 
                 byte[] byteArray = Encoding.UTF8.GetBytes(string.Format(strNewValue, action_enviar_xml_assinado, id_empresa, 
@@ -91,7 +91,7 @@ namespace WebServices.Contando
         /// <summary>
         /// retorna informações do cliente, se esse existir no banco de dados (login)
         /// </summary>
-        public string consultarEmpresas(string email, string senha, string documento)
+        public string consultarEmpresas(string email, string senha, string documento, bool educont)
         {
             try
             {
@@ -101,6 +101,8 @@ namespace WebServices.Contando
                 wc.QueryString.Add("email", email);
                 wc.QueryString.Add("senha", senha);
                 wc.QueryString.Add("documento", documento);
+                if (educont)
+                    wc.QueryString.Add("educont", "1");
 
                 var data = wc.UploadValues(web_service_login, "POST", wc.QueryString);
 

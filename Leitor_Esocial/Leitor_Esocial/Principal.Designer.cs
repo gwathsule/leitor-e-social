@@ -34,22 +34,23 @@
             this.btnAjuda = new System.Windows.Forms.PictureBox();
             this.btnFechar = new System.Windows.Forms.PictureBox();
             this.pnNFeEntrada = new System.Windows.Forms.Panel();
+            this.lbl_status_sincronizador = new System.Windows.Forms.Label();
+            this.lbl_status_certificado = new System.Windows.Forms.Label();
+            this.lbl_nome_usuario = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.btn_cnf_certificado = new System.Windows.Forms.Button();
             this.eSocialDataGrid = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_login = new System.Windows.Forms.Button();
             this.icon_principal = new System.Windows.Forms.NotifyIcon(this.components);
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lbl_nome_usuario = new System.Windows.Forms.Label();
-            this.lbl_status_certificado = new System.Windows.Forms.Label();
-            this.lbl_status_sincronizador = new System.Windows.Forms.Label();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAjuda)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFechar)).BeginInit();
@@ -65,7 +66,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(821, 33);
+            this.panel1.Size = new System.Drawing.Size(358, 33);
             this.panel1.TabIndex = 1;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
@@ -75,18 +76,19 @@
             // 
             this.btnAjuda.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAjuda.Image = ((System.Drawing.Image)(resources.GetObject("btnAjuda.Image")));
-            this.btnAjuda.Location = new System.Drawing.Point(765, 8);
+            this.btnAjuda.Location = new System.Drawing.Point(309, 8);
             this.btnAjuda.Name = "btnAjuda";
             this.btnAjuda.Size = new System.Drawing.Size(19, 22);
             this.btnAjuda.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnAjuda.TabIndex = 3;
             this.btnAjuda.TabStop = false;
+            this.btnAjuda.Click += new System.EventHandler(this.btnAjuda_Click);
             // 
             // btnFechar
             // 
             this.btnFechar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnFechar.Image = ((System.Drawing.Image)(resources.GetObject("btnFechar.Image")));
-            this.btnFechar.Location = new System.Drawing.Point(790, 8);
+            this.btnFechar.Location = new System.Drawing.Point(334, 8);
             this.btnFechar.Name = "btnFechar";
             this.btnFechar.Size = new System.Drawing.Size(19, 22);
             this.btnFechar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -107,14 +109,68 @@
             this.pnNFeEntrada.Controls.Add(this.btn_login);
             this.pnNFeEntrada.Location = new System.Drawing.Point(8, 39);
             this.pnNFeEntrada.Name = "pnNFeEntrada";
-            this.pnNFeEntrada.Size = new System.Drawing.Size(810, 431);
+            this.pnNFeEntrada.Size = new System.Drawing.Size(347, 431);
             this.pnNFeEntrada.TabIndex = 3;
+            // 
+            // lbl_status_sincronizador
+            // 
+            this.lbl_status_sincronizador.AutoSize = true;
+            this.lbl_status_sincronizador.Location = new System.Drawing.Point(76, 41);
+            this.lbl_status_sincronizador.Name = "lbl_status_sincronizador";
+            this.lbl_status_sincronizador.Size = new System.Drawing.Size(52, 13);
+            this.lbl_status_sincronizador.TabIndex = 10;
+            this.lbl_status_sincronizador.Text = "desligado";
+            // 
+            // lbl_status_certificado
+            // 
+            this.lbl_status_certificado.AutoSize = true;
+            this.lbl_status_certificado.Location = new System.Drawing.Point(63, 3);
+            this.lbl_status_certificado.Name = "lbl_status_certificado";
+            this.lbl_status_certificado.Size = new System.Drawing.Size(137, 13);
+            this.lbl_status_certificado.TabIndex = 9;
+            this.lbl_status_certificado.Text = "Certificado não configurado";
+            // 
+            // lbl_nome_usuario
+            // 
+            this.lbl_nome_usuario.AutoSize = true;
+            this.lbl_nome_usuario.Location = new System.Drawing.Point(53, 19);
+            this.lbl_nome_usuario.Name = "lbl_nome_usuario";
+            this.lbl_nome_usuario.Size = new System.Drawing.Size(119, 13);
+            this.lbl_nome_usuario.TabIndex = 8;
+            this.lbl_nome_usuario.Text = "Nenhum usuário logado";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(5, 41);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Sincronizador:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Usuario: ";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Certificado: ";
             // 
             // btn_cnf_certificado
             // 
-            this.btn_cnf_certificado.Location = new System.Drawing.Point(515, 7);
+            this.btn_cnf_certificado.Location = new System.Drawing.Point(7, 57);
             this.btn_cnf_certificado.Name = "btn_cnf_certificado";
-            this.btn_cnf_certificado.Size = new System.Drawing.Size(137, 23);
+            this.btn_cnf_certificado.Size = new System.Drawing.Size(168, 23);
             this.btn_cnf_certificado.TabIndex = 4;
             this.btn_cnf_certificado.Text = "Configurar Certificado";
             this.btn_cnf_certificado.UseVisualStyleBackColor = true;
@@ -122,35 +178,25 @@
             // 
             // eSocialDataGrid
             // 
+            this.eSocialDataGrid.AllowUserToAddRows = false;
             this.eSocialDataGrid.AllowUserToDeleteRows = false;
             this.eSocialDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.eSocialDataGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
+            this.data,
             this.status});
-            this.eSocialDataGrid.Location = new System.Drawing.Point(0, 35);
+            this.eSocialDataGrid.Location = new System.Drawing.Point(0, 86);
             this.eSocialDataGrid.Name = "eSocialDataGrid";
             this.eSocialDataGrid.ReadOnly = true;
-            this.eSocialDataGrid.Size = new System.Drawing.Size(805, 388);
+            this.eSocialDataGrid.RowHeadersVisible = false;
+            this.eSocialDataGrid.Size = new System.Drawing.Size(345, 337);
             this.eSocialDataGrid.TabIndex = 3;
-            // 
-            // id
-            // 
-            this.id.HeaderText = "saida";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            this.id.Width = 660;
-            // 
-            // status
-            // 
-            this.status.HeaderText = "status";
-            this.status.Name = "status";
-            this.status.ReadOnly = true;
             // 
             // btn_login
             // 
-            this.btn_login.Location = new System.Drawing.Point(658, 7);
+            this.btn_login.Location = new System.Drawing.Point(181, 57);
             this.btn_login.Name = "btn_login";
-            this.btn_login.Size = new System.Drawing.Size(143, 23);
+            this.btn_login.Size = new System.Drawing.Size(161, 23);
             this.btn_login.TabIndex = 2;
             this.btn_login.Text = "Realizar Login";
             this.btn_login.UseVisualStyleBackColor = true;
@@ -190,71 +236,37 @@
             // panel10
             // 
             this.panel10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.panel10.Location = new System.Drawing.Point(819, 0);
+            this.panel10.Location = new System.Drawing.Point(356, 0);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(2, 470);
+            this.panel10.Size = new System.Drawing.Size(10, 470);
             this.panel10.TabIndex = 46;
             // 
-            // label1
+            // id
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Certificado: ";
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
             // 
-            // label2
+            // data
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 19);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Usuario: ";
+            this.data.HeaderText = "DATA";
+            this.data.Name = "data";
+            this.data.ReadOnly = true;
+            this.data.Width = 120;
             // 
-            // label3
+            // status
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(352, 3);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Sincronizador:";
-            // 
-            // lbl_nome_usuario
-            // 
-            this.lbl_nome_usuario.AutoSize = true;
-            this.lbl_nome_usuario.Location = new System.Drawing.Point(53, 19);
-            this.lbl_nome_usuario.Name = "lbl_nome_usuario";
-            this.lbl_nome_usuario.Size = new System.Drawing.Size(119, 13);
-            this.lbl_nome_usuario.TabIndex = 8;
-            this.lbl_nome_usuario.Text = "Nenhum usuário logado";
-            // 
-            // lbl_status_certificado
-            // 
-            this.lbl_status_certificado.AutoSize = true;
-            this.lbl_status_certificado.Location = new System.Drawing.Point(63, 3);
-            this.lbl_status_certificado.Name = "lbl_status_certificado";
-            this.lbl_status_certificado.Size = new System.Drawing.Size(137, 13);
-            this.lbl_status_certificado.TabIndex = 9;
-            this.lbl_status_certificado.Text = "Certificado não configurado";
-            // 
-            // lbl_status_sincronizador
-            // 
-            this.lbl_status_sincronizador.AutoSize = true;
-            this.lbl_status_sincronizador.Location = new System.Drawing.Point(423, 3);
-            this.lbl_status_sincronizador.Name = "lbl_status_sincronizador";
-            this.lbl_status_sincronizador.Size = new System.Drawing.Size(52, 13);
-            this.lbl_status_sincronizador.TabIndex = 10;
-            this.lbl_status_sincronizador.Text = "desligado";
+            this.status.HeaderText = "STATUS";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 120;
             // 
             // Principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(821, 470);
+            this.ClientSize = new System.Drawing.Size(358, 470);
             this.Controls.Add(this.panel10);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel9);
@@ -289,14 +301,15 @@
         private System.Windows.Forms.Button btn_login;
         private System.Windows.Forms.DataGridView eSocialDataGrid;
         private System.Windows.Forms.Button btn_cnf_certificado;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn status;
         private System.Windows.Forms.Label lbl_status_sincronizador;
         private System.Windows.Forms.Label lbl_status_certificado;
         private System.Windows.Forms.Label lbl_nome_usuario;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn data;
+        private System.Windows.Forms.DataGridViewTextBoxColumn status;
     }
 }
 

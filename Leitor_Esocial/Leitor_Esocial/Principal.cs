@@ -1,10 +1,14 @@
-﻿using Bilbliotecas.controlador;
+﻿using Bilbliotecas.app;
+using Bilbliotecas.controlador;
 using Bilbliotecas.modelo;
 using Bilbliotecas.processos;
 using OnContabilLibrary.Models.Sistema;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Leitor_Esocial
@@ -16,6 +20,7 @@ namespace Leitor_Esocial
         private ModalConfig modal_config;
         private UsersControl user_control;
         private ModalLogin modal_login;
+        private ModalLog modal_log;
 
         //variáveis form
         private bool arrastando;
@@ -30,6 +35,7 @@ namespace Leitor_Esocial
             this.StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
             inicializaAutomatico();
+            this.modal_log = new ModalLog();
             atualizaProcessos();
             //para fins de teste sem API
             this.dlgDiretorioESocial = new FolderBrowserDialog();
@@ -37,7 +43,40 @@ namespace Leitor_Esocial
 
 
         //=============/ METODOS MANUAIS /===============//
-        
+
+        private void atualizarTabela()
+        {
+            if (this.user_control.User_logado != null)
+            {
+                List<ESocial> ultimos = ESocialApp.getDocumentosUltimosDocumentos(this.user_control.User_logado.Id_servidor, 30);
+
+                eSocialDataGrid.Rows.Clear();
+
+                foreach (ESocial documento in ultimos)
+                {
+                    var index = eSocialDataGrid.Rows.Add();
+                    eSocialDataGrid.Rows[index].Cells["id"].Value = documento.Id_servidor;
+                    eSocialDataGrid.Rows[index].Cells["data"].Value = documento.Data.ToString();
+
+                    switch (documento.Status)
+                    {
+                        case 0:
+                            eSocialDataGrid.Rows[index].Cells["status"].Value = "nao assinada";
+                            break;
+                        case 1:
+                            eSocialDataGrid.Rows[index].Cells["status"].Value = "processada";
+                            break;
+                        case 2:
+                            eSocialDataGrid.Rows[index].Cells["status"].Value = "em nuvem";
+                            break;
+                        default:
+                            eSocialDataGrid.Rows[index].Cells["status"].Value = "indefinido";
+                            break;
+                    }
+                }
+            }
+        }
+
         private void inicializaAutomatico()
         {
             try
@@ -111,6 +150,7 @@ namespace Leitor_Esocial
                 {
                     lbl_status_certificado.Text = "não configurado";
                 }
+                atualizarTabela();
             }
             else
             {
@@ -129,6 +169,8 @@ namespace Leitor_Esocial
                     lbl_status_sincronizador.Text = "desligado";
                     return;
                 }
+
+                atualizarTabela();
 
                 if (processo == null)
                 {
@@ -180,62 +222,11 @@ namespace Leitor_Esocial
 
         private void abrirInterface(object sender, EventArgs e)
         {
+            atualizarTabela();
             this.Show();
         }
 
         //=============/ METODOS AUTOMÁTICOS /===============//
-
-        private void btnAdicionarEmpresa_Click(object sender, EventArgs e)
-        {
-            try
-            {
-               
-            } catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void btnSetup_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void btnConfigCNPJ_Click(object sender, EventArgs e)
-        {
-            try
-            {
-               
-            }
-            catch (Exception ex)
-            {
-                if(ex.Message.Contains("Coleção foi modificada") == false)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-        }
-
-        private void btnNFeEntrada_Click(object sender, EventArgs e)
-        {
-            try
-            {
-               
-            } catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void listaCnpj_Click(object sender, EventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
 
         private void btnFechar_Click(object sender, EventArgs e)
         {
@@ -243,18 +234,6 @@ namespace Leitor_Esocial
             {
                 this.Hide();
                 icon_principal.ShowBalloonTip(2, "Assinador ESocial", "Continuando em segundo plano", ToolTipIcon.Info);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                
             }
             catch (Exception ex)
             {
@@ -332,6 +311,11 @@ namespace Leitor_Esocial
             this.modal_login.ShowDialog();
             this.atualizarInterface();
             atualizaProcessos();
+        }
+
+        private void btnAjuda_Click(object sender, EventArgs e)
+        {
+            this.modal_log.ShowDialog();
         }
     }
 }
