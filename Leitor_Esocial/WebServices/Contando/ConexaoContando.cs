@@ -47,33 +47,42 @@ namespace WebServices.Contando
             }
         }
 
-        /// <summary>
-        /// envia um documento processado
-        /// </summary>
-        /// <returns></returns>
-        public string enviarXmlAssinado(int id_empresa, string hash, int id_documento_servidor, string xml_assinado_base_64, 
+        public string enviarXmlAssinado(int id_empresa, string hash, int id_documento_servidor, string xml_assinado_base_64,
             string reposta_esocial_base64, int ambiente_documento)
         {
             try
             {
+                string strNewValue;
+                string strResponse;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
-                WebClient wc = new WebClient();
 
-                wc.QueryString.Add("id", id_empresa.ToString());
-                wc.QueryString.Add("hash", hash);
-                wc.QueryString.Add("action", action_enviar_xml_assinado);
-                wc.QueryString.Add("idRegistro", id_documento_servidor.ToString());
-                wc.QueryString.Add("xml", xml_assinado_base_64);
-                wc.QueryString.Add("resposta", reposta_esocial_base64);
-                wc.QueryString.Add("ambiente", ambiente_documento.ToString());
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(web_service_xmls);
 
-                var data = wc.UploadValues(web_service_xmls, "POST", wc.QueryString);
+                req.Method = "POST";
+                req.ContentType = "application/x-www-form-urlencoded";
+                strNewValue = "action={0}&id={1}&hash={2}&idRegistro={3}&xml={4}&resposta={5}&ambiente={6}";
 
-                // data here is optional, in case we recieve any string data back from the POST request.
-                string responseString = UnicodeEncoding.UTF8.GetString(data);
-                return responseString;
-            }
-            catch (Exception ex)
+                byte[] byteArray = Encoding.UTF8.GetBytes(string.Format(strNewValue, action_enviar_xml_assinado, id_empresa, 
+                    hash, id_documento_servidor, xml_assinado_base_64, reposta_esocial_base64, ambiente_documento));
+                req.ContentLength = byteArray.Length;
+                Stream dataStream = req.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                try
+                {
+                    HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                    Stream dataStream_resp = response.GetResponseStream();
+                    StreamReader SR = new StreamReader(dataStream_resp, Encoding.UTF8);
+                    strResponse = SR.ReadToEnd();
+                    response.Close();
+                    dataStream_resp.Close();
+                    SR.Close();
+                    req.Abort();
+                    return strResponse;
+                }
+                catch (Exception e){ req.Abort(); throw e; }
+            }catch (Exception ex)
             {
                 throw ex;
             }

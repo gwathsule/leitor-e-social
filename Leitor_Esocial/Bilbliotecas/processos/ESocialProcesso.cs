@@ -43,17 +43,17 @@ namespace Bilbliotecas.processos
                         //extrairXmlsRetornoServidor(retorno_servidor);
                         
                         //pega no máximo 5 xmls do banco para assinar
-                        List<ESocial> documentos_nao_processados = ESocialApp.getDocumentosNaoProcessados(5, user.Id_servidor);
-                        if (documentos_nao_processados.Count > 0)
-                        {
-                            log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
-                            processarDocumentosESocial(documentos_nao_processados);
-                            notificao_info(documentos_nao_processados.Count + " novos documentos assinados");
-                        }
-                        else
-                        {
-                            log.log("nenhum documento novo encontrado");
-                        }
+                        //List<ESocial> documentos_nao_processados = ESocialApp.getDocumentosNaoProcessados(5, user.Id_servidor);
+                        //if (documentos_nao_processados.Count > 0)
+                        //{
+                        //    log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
+                        //    processarDocumentosESocial(documentos_nao_processados);
+                        //    notificao_info(documentos_nao_processados.Count + " novos documentos assinados");
+                        //}
+                        //else
+                        //{
+                        //    log.log("nenhum documento novo encontrado");
+                        //}
 
                         //pega no máximo 10 xmls processados no banco para envio ao servidor
                         List<ESocial> documentos_processados = ESocialApp.getDocumentosProcessados(10, user.Id_servidor);
@@ -116,9 +116,7 @@ namespace Bilbliotecas.processos
                 int erro = (int)json["erro"];
                 string retorno = (string)json["retorno"];
 
-                this.log.log("Retorno do WB Contando: ");
-                this.log.log("Erro: " + erro);
-                this.log.log("retorno: " + retorno);
+                this.log.log("Retorno do WB Contando: " + erro + " - " + retorno);
 
                 if (erro == 0)
                 {
