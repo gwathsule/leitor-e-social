@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Bilbliotecas.modelo;
 using DataBase.dao;
 using System.Data;
@@ -17,7 +13,7 @@ namespace Bilbliotecas.app
             try
             {
                 UserDAO.salvarUser(user.Id_servidor, user.Nome, user.Hash, user.Email, 
-                    user.Senha, user.Documento, user.Status_certificado);
+                    user.Senha, user.Documento, user.Status_certificado, Convert.ToInt32(user.Educont));
             } catch (Exception ex)
             {
                 throw ex;
@@ -69,6 +65,15 @@ namespace Bilbliotecas.app
                 user.Serial_certificado = dados.Tables[0].Rows[0].Field<string>("serial_certificado");
                 user.Caminho_certificado = dados.Tables[0].Rows[0].Field<string>("caminho_certificado");
                 user.Senha_certificado = dados.Tables[0].Rows[0].Field<string>("senha_certificado");
+                string educont = dados.Tables[0].Rows[0]["educont"].ToString();
+                if (educont.Equals(""))
+                {
+                    user.Educont = false;
+                }
+                else
+                {
+                    user.Educont = Int32.Parse(dados.Tables[0].Rows[0]["educont"].ToString()) != 0;
+                }
                 return user;
             }
             catch (Exception ex)

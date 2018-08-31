@@ -13,7 +13,7 @@ namespace DataBase.dao
     {
         private const string nome_bd = "database";
         //private const string senha_bd = "OnContabil#2018";
-        private const int versao_atual = 0;
+        private const int versao_atual = 1;
 
         private string pasta_db = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"AssinadorESocial") + @"\database";
         private string path;
@@ -143,7 +143,10 @@ namespace DataBase.dao
 
             if (versao_bd == 1)
             {
-                //alterações da versao 1
+                comando_sql =
+                    "ALTER TABLE Users " +
+                    "ADD educont INTEGER";
+                efetuarMigracao(comando_sql, versao_bd);
                 return;
             }
 

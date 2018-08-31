@@ -16,6 +16,7 @@ namespace Bilbliotecas.modelo
         public string Email { get; set; }
         public string Senha { get; set; }
         public string Documento { get; set; }
+        public bool Educont { get; set; }
 
         /// <summary>
         /// 0 - não confiurado |  
@@ -30,7 +31,7 @@ namespace Bilbliotecas.modelo
         public X509Certificate2 Certificado { get; set; }
 
         //contrutores com as propriedades obrigatórias (BD)
-        public User(int id_servidor, string nome, string hash, string email, string senha, string documento, int status_certificado)
+        public User(int id_servidor, string nome, string hash, string email, string senha, string documento, int status_certificado, bool educont)
         {
             this.Id_servidor = id_servidor;
             this.Nome = nome;
@@ -39,11 +40,12 @@ namespace Bilbliotecas.modelo
             this.Senha = senha;
             this.Documento = documento;
             this.Status_certificado = status_certificado;
+            this.Educont = educont;
         }
 
 
         public User(int id, int id_servidor, string nome, string hash, string email, string senha, 
-            string documento, int status_certificado)
+            string documento, int status_certificado, bool educont)
         {
             this.Id = id;
             this.Id_servidor = id_servidor;
@@ -53,10 +55,11 @@ namespace Bilbliotecas.modelo
             this.Senha = senha;
             this.Documento = documento;
             this.Status_certificado = status_certificado;
+            this.Educont = educont;
         }
 
         public User(int id, int id_servidor, string nome, string hash, string email, string senha, string documento, 
-            int status_certificado, string serial_certificado, string caminho_certificado, string senha_certificado)
+            int status_certificado, string serial_certificado, string caminho_certificado, string senha_certificado, bool educont)
         {
             this.Id = id;
             this.Id_servidor = id_servidor;
@@ -69,6 +72,7 @@ namespace Bilbliotecas.modelo
             this.Serial_certificado = serial_certificado;
             this.Caminho_certificado = caminho_certificado;
             this.Senha_certificado = senha_certificado;
+            this.Educont = educont;
         }
 
         public User(){}

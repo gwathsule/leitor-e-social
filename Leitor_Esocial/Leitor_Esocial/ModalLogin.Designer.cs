@@ -55,7 +55,6 @@
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(289, 29);
             this.txt_email.TabIndex = 1;
-            this.txt_email.Text = "teste@apicontando.com.br";
             // 
             // lbl_email
             // 
@@ -84,7 +83,6 @@
             this.txt_documento.Name = "txt_documento";
             this.txt_documento.Size = new System.Drawing.Size(228, 29);
             this.txt_documento.TabIndex = 3;
-            this.txt_documento.Text = "10335370000133";
             // 
             // lbl_senha
             // 
@@ -104,7 +102,6 @@
             this.txt_senha.PasswordChar = '*';
             this.txt_senha.Size = new System.Drawing.Size(289, 29);
             this.txt_senha.TabIndex = 5;
-            this.txt_senha.Text = "12345678";
             // 
             // chk_educont
             // 

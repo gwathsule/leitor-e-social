@@ -88,7 +88,7 @@ namespace WebServices.Esocial
             envelope_env += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.esocial.gov.br/servicos/empregador/lote/eventos/envio/v2_4_02\">";
             envelope_env += "<soapenv:Header/>";
             envelope_env += "<soapenv:Body>";
-            envelope_env += File.ReadAllText(@"C:\Users\Rafael\Documents\esocial\varios_eventos_assinados.xml");
+            envelope_env += eventos_assinados.InnerXml;
             envelope_env += "</soapenv:Body>";
             envelope_env += "</soapenv:Envelope>";
 

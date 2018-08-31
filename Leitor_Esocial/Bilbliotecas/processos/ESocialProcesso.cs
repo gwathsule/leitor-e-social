@@ -38,12 +38,10 @@ namespace Bilbliotecas.processos
                     try
                     {
                         log.log("Iniciando verificação no webservice");
-                        string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash);
+                        string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash, user.Educont);
                         //salva os documentos no banco
-                        extrairXmlsRetornoServidor(retorno_servidor);
+                        List<ESocial> documentos_nao_processados = extrairXmlsRetornoServidor(retorno_servidor);
                         
-                        //pega no máximo 5 xmls do banco para assinar
-                        List<ESocial> documentos_nao_processados = ESocialApp.getDocumentosNaoProcessados(5, user.Id_servidor);
                         if (documentos_nao_processados.Count > 0)
                         {
                             log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
@@ -69,15 +67,16 @@ namespace Bilbliotecas.processos
                             log.log("nenhum novo documento processado encontrado");
                         }
 
-                    } catch(Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         this.log.log("Erro no processo de sicronização: " + ex.Message);
                         notificao_erro(ex.Message);
                     }
 
                     //inicia espera
-                    this.log.log("Iniciando aguardo de " + this.Intervalo_minutos + " antes de iniciar um novo upload");
-                    this.log.log("==========================================//=========================================");
+                    this.log.log("Iniciando aguardo de " + this.Intervalo_minutos + " antes de iniciar um novo upload" +
+                                "\n====================//======================");
                     try
                     {
                         Thread.Sleep(this.Intervalo_minutos);
@@ -91,9 +90,13 @@ namespace Bilbliotecas.processos
                 }
 
             }
+            catch (ThreadAbortException)
+            {
+                this.log.log("Processo abortado");
+            }
             catch (Exception ex)
             {
-                    log.log("ERRO CRÍTICO: " + ex.Message);
+                log.log("ERRO CRÍTICO: " + ex.Message);
                 notificao_erro("ERRO CRÍTICO: " + ex.Message);
             }
 
@@ -110,7 +113,7 @@ namespace Bilbliotecas.processos
 
                 //envia informações do documento à nuvem
                 string retorno_servidor = contanto_wb.enviarXmlAssinado(this.user.Id_servidor, this.user.Hash, 
-                    documento.Id_servidor, documento.Xml_base64, documento.Resposta_xml_base64, documento.Ambiente);
+                    documento.Id_servidor, documento.Xml_base64, documento.Resposta_xml_base64, documento.Ambiente, this.user.Educont);
 
                 JObject json = JObject.Parse(retorno_servidor);
 
@@ -147,12 +150,8 @@ namespace Bilbliotecas.processos
                 string cdResposta = resposta.GetElementsByTagName("cdResposta").Item(0).InnerText;
                 string descResposta = resposta.GetElementsByTagName("descResposta").Item(0).InnerText;
                 this.log.log("Resposta do servidor: " + cdResposta + " - " + descResposta);
-
-                if (cdResposta.Equals("201"))
-                {
-                    ESocialApp.marcarComoProcessado(documento, xml_assinado, resposta);
-                    doc_processado++;
-                }
+                ESocialApp.novoDocumentoProcessado(documento, xml_assinado, resposta, this.user.Id);
+                doc_processado++;
                 count++;
             }
 
@@ -164,15 +163,16 @@ namespace Bilbliotecas.processos
         /// <summary>
         /// extrai os xmls compactados presente no servidor
         /// </summary>
-        private void extrairXmlsRetornoServidor(string retorno_servidor)
+        private List<ESocial> extrairXmlsRetornoServidor(string retorno_servidor)
         {
             try
             {
-                if(retorno_servidor.Equals(""))
-                {
-                    return;
-                }
                 List<ESocial> documentos = new List<ESocial>();
+
+                if (retorno_servidor.Equals(""))
+                {
+                    return documentos;
+                }
                 JObject json = JObject.Parse(retorno_servidor);
 
                 int erro = (int)json["erro"];
@@ -200,9 +200,11 @@ namespace Bilbliotecas.processos
                                                System.Globalization.CultureInfo.InvariantCulture);
 
                         ESocial documento = new ESocial(assinado, id_servidor, ambiente, id_empresa, data, xml_base64);
-                        ESocialApp.novo(documento, this.user.Id);
+                        documentos.Add(documento);
                     }
                 }
+
+                return documentos;
             } catch(Exception ex)
             {
                 throw new Exception("Erro extrair os xmls do retorno do servidor: " + ex.Message);

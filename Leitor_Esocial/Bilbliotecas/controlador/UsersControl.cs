@@ -64,12 +64,12 @@ namespace Bilbliotecas.controlador
             }
         }
 
-        public void cadastrarUserLogado(IDictionary<string, string> empresa_info)
+        public void cadastrarUserLogado(IDictionary<string, string> empresa_info, bool educont)
         {
             try
             {
                 User user = new User(Int32.Parse(empresa_info["id"]), empresa_info["nome"], empresa_info["hash"], empresa_info["email"],
-                                     empresa_info["senha"], empresa_info["documento"], 0);
+                                     empresa_info["senha"], empresa_info["documento"], 0, educont);
                 UserApp.salvarUser(user);
                 this.User_logado = user;
             }

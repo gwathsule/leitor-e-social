@@ -35,7 +35,7 @@ namespace Leitor_Esocial
                 empresa_info.Add("email", txt_email.Text);
                 empresa_info.Add("senha", txt_senha.Text);
                 empresa_info.Add("documento", txt_documento.Text);
-                user_control.cadastrarUserLogado(empresa_info);
+                user_control.cadastrarUserLogado(empresa_info, chk_educont.Checked);
                 MessageBox.Show("empresa '" + empresa_info["nome"] + "' logada com sucesso.");
                 this.Close();
             }

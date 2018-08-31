@@ -11,18 +11,19 @@ namespace DataBase.dao
     public static class UserDAO
     {
         public static void salvarUser(int id_servidor, string nome, string hash, string email, string senha, string documento,
-                                      int status_certificado)
+                                      int status_certificado, int educont)
         {
             try
             {
                 string sql_insert =
-                    "INSERT INTO Users(id_servidor, nome, hash, email, senha, documento, status_certificado)" +
+                    "INSERT INTO Users(id_servidor, nome, hash, email, senha, documento, educont, status_certificado)" +
                     "VALUES(" + id_servidor + ", '" 
                     + nome + "', '" 
                     + hash + "', '" 
                     + email + "', '" 
                     + senha + "', '" 
-                    + documento + "', " 
+                    + documento + "', "
+                    + educont + ", "
                     + status_certificado + ")";
 
                 string sql_update =
@@ -33,6 +34,7 @@ namespace DataBase.dao
                     "email = '" + email + "', " +
                     "senha = '" + senha + "', " +
                     "documento = '" + documento + "', " +
+                    "educont = '" + educont + "', " +
                     "status_certificado = " + status_certificado + " " +
                     "WHERE id = " + 1;
 

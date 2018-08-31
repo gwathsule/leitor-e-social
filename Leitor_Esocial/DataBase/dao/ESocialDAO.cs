@@ -164,6 +164,31 @@ namespace DataBase.dao
             }
         }
 
+        public static void novoDocumentoProcessado(int id_servidor, int id_empresa, int status, int ambiente, DateTime data, 
+            string xml_base64, string resposta_xml_base64, int user_id)
+        {
+            string sql_insert =
+                    "INSERT INTO ESocial(id_servidor, id_empresa, status, ambiente, data, xml_base64, resposta_xml_base64, id_user)" +
+                    "VALUES(" + 
+                    id_servidor + ", " + 
+                    id_empresa + ", " + 
+                    status + ", " + 
+                    ambiente + ", '" + 
+                    data.ToString("yyyy-MM-dd") + "', '" + 
+                    xml_base64 + "', '" +
+                    resposta_xml_base64 + "', " +
+                    user_id + ")";
+
+            if (existeNoBanco(id_servidor) == false)
+            {
+                using (Conexao bd = new Conexao())
+                {
+                    SQLiteCommand cmd = new SQLiteCommand(sql_insert, bd.Conector);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public static void marcarComoProcessado(int documento_id)
         {
             string sql_update =

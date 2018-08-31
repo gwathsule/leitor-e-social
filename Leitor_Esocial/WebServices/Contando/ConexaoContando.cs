@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace WebServices.Contando
 {
@@ -24,7 +25,7 @@ namespace WebServices.Contando
         /// procura no web service contando, novos jsons para assinatura
         /// </summary>
         /// <returns></returns>
-        public string consultarXmls(int id, string hash)
+        public string consultarXmls(int id, string hash, bool educont)
         {
             try
             {
@@ -34,6 +35,8 @@ namespace WebServices.Contando
                 wc.QueryString.Add("id", id.ToString());
                 wc.QueryString.Add("hash", hash);
                 wc.QueryString.Add("action", action_consultar_xml);
+                if (educont)
+                    wc.QueryString.Add("educont", "1");
 
                 var data = wc.UploadValues(web_service_xmls, "POST", wc.QueryString);
 
@@ -48,41 +51,59 @@ namespace WebServices.Contando
         }
 
         public string enviarXmlAssinado(int id_empresa, string hash, int id_documento_servidor, string xml_assinado_base_64,
-            string reposta_esocial_base64, int ambiente_documento)
+            string reposta_esocial_base64, int ambiente_documento, bool educont)
         {
             try
             {
-                string strNewValue;
-                string strResponse;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                string postData = "";
 
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(web_service_xmls);
+                Dictionary<string, string> postParameters = new Dictionary<string, string>();
 
-                req.Method = "POST";
-                req.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
-                strNewValue = "action={0}&id={1}&hash={2}&idRegistro={3}&xml={4}&resposta={5}&ambiente={6}";
+                postParameters.Add("action", action_enviar_xml_assinado);
+                postParameters.Add("id", id_empresa.ToString());
+                postParameters.Add("hash", hash);
+                postParameters.Add("idRegistro", id_documento_servidor.ToString());
+                postParameters.Add("xml", xml_assinado_base_64);
+                postParameters.Add("resposta", reposta_esocial_base64);
+                postParameters.Add("ambiente", ambiente_documento.ToString());
+                if (educont)
+                    postParameters.Add("educont", "1");
 
-                byte[] byteArray = Encoding.UTF8.GetBytes(string.Format(strNewValue, action_enviar_xml_assinado, id_empresa, 
-                    hash, id_documento_servidor, xml_assinado_base_64, reposta_esocial_base64, ambiente_documento));
-                req.ContentLength = byteArray.Length;
-                Stream dataStream = req.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                try
+                foreach (string key in postParameters.Keys)
                 {
-                    HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                    Stream dataStream_resp = response.GetResponseStream();
-                    StreamReader SR = new StreamReader(dataStream_resp, Encoding.UTF8);
-                    strResponse = SR.ReadToEnd();
-                    response.Close();
-                    dataStream_resp.Close();
-                    SR.Close();
-                    req.Abort();
-                    return strResponse;
+                    postData += HttpUtility.UrlEncode(key) + "="
+                          + HttpUtility.UrlEncode(postParameters[key]) + "&";
                 }
-                catch (Exception e){ req.Abort(); throw e; }
-            }catch (Exception ex)
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
+                HttpWebRequest myHttpWebRequest = (HttpWebRequest)HttpWebRequest.Create(web_service_xmls);
+                myHttpWebRequest.Method = "POST";
+
+                byte[] data = Encoding.ASCII.GetBytes(postData);
+
+                myHttpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                myHttpWebRequest.ContentLength = data.Length;
+
+                Stream requestStream = myHttpWebRequest.GetRequestStream();
+                requestStream.Write(data, 0, data.Length);
+                requestStream.Close();
+
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+
+                Stream responseStream = myHttpWebResponse.GetResponseStream();
+
+                StreamReader myStreamReader = new StreamReader(responseStream, Encoding.Default);
+
+                string pageContent = myStreamReader.ReadToEnd();
+
+                myStreamReader.Close();
+                responseStream.Close();
+
+                myHttpWebResponse.Close();
+
+                return pageContent;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -101,8 +122,11 @@ namespace WebServices.Contando
                 wc.QueryString.Add("email", email);
                 wc.QueryString.Add("senha", senha);
                 wc.QueryString.Add("documento", documento);
+
                 if (educont)
+                {
                     wc.QueryString.Add("educont", "1");
+                }
 
                 var data = wc.UploadValues(web_service_login, "POST", wc.QueryString);
 

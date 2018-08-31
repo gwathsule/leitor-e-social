@@ -131,5 +131,20 @@ namespace Bilbliotecas.app
                 throw ex;
             }
         }
+
+        internal static void novoDocumentoProcessado(ESocial documento, XmlDocument xml_assinado, XmlDocument resposta, int user_id)
+        {
+            try
+            {
+                string resposta_base64 = base64Encode(resposta.InnerXml);
+                string xml_assinado_base64 = base64Encode(xml_assinado.InnerXml);
+                ESocialDAO.novoDocumentoProcessado(documento.Id_servidor, documento.Id_empresa, 1, documento.Ambiente, 
+                                                   documento.Data, xml_assinado_base64, resposta_base64, user_id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao salvar ESocial no banco: " + ex.Message);
+            }
+        }
     }
 }
