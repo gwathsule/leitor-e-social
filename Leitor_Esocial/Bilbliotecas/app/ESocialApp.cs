@@ -146,5 +146,17 @@ namespace Bilbliotecas.app
                 throw new Exception("Erro ao salvar ESocial no banco: " + ex.Message);
             }
         }
+
+        internal static void excluirLocal(int documento_id)
+        {
+            try
+            {
+                ESocialDAO.excluirLocal(documento_id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

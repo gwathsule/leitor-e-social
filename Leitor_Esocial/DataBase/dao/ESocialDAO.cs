@@ -189,6 +189,22 @@ namespace DataBase.dao
             }
         }
 
+        public static void excluirLocal(int documento_id)
+        {
+            string sql_delete =
+                "DELETE FROM ESocial " +
+                "WHERE id = " + documento_id;
+
+            if (checaStatusNoBanco(documento_id, "=", 1))
+            {
+                using (Conexao bd = new Conexao())
+                {
+                    SQLiteCommand cmd = new SQLiteCommand(sql_delete, bd.Conector);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public static void marcarComoProcessado(int documento_id)
         {
             string sql_update =

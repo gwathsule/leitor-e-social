@@ -124,7 +124,7 @@ namespace Bilbliotecas.processos
 
                 if (erro == 0)
                 {
-                    ESocialApp.marcarComoArmazenadoEmNuvem(documento.id);
+                    ESocialApp.excluirLocal(documento.id);
                 }
                 count++;
             }
@@ -144,7 +144,7 @@ namespace Bilbliotecas.processos
                 XmlDocument resposta = new XmlDocument();
                 //assina e envia documento
                 XmlDocument xml_assinado = ESocialControl.assinarXML(this.user.Certificado, documento.Xml_base64);
-                string resposta_servidor = ConexaoEsocial.processar_eventos(xml_assinado, this.user.Certificado);
+                string resposta_servidor = ConexaoEsocial.processar_eventos(xml_assinado, this.user.Certificado, documento.Ambiente);
                 resposta.LoadXml(resposta_servidor);
 
                 string cdResposta = resposta.GetElementsByTagName("cdResposta").Item(0).InnerText;

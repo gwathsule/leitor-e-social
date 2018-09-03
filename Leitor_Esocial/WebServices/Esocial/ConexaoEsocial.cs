@@ -19,42 +19,41 @@ namespace WebServices.Esocial
         private const string web_service_producao =
             "https://webservices.envio.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
 
-        //metodos privados
-        private static string getRetornoServidor(string repostaServidor)
-        {
-            try
-            {
-                byte[] encodedString = Encoding.UTF8.GetBytes(repostaServidor);
-                MemoryStream ms = new MemoryStream(encodedString);
-                ms.Flush();
-                ms.Position = 0;
-
-                XmlDocument doc = new XmlDocument();
-                doc.Load(ms);
-                XmlNodeList elemList = doc.GetElementsByTagName("nfeRecepcaoEventoNFResult");
-                return elemList.Item(0).InnerXml;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        private static string enviarRequisicao(string data, X509Certificate2 certificado)
+        private static string enviarRequisicaoAmbienteProducao(string data, X509Certificate2 certificado)
         {
             try
             {
                 XmlDocument xml = new XmlDocument();
                 xml.LoadXml(data);
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-                var urlServicoEnvio = web_service_producao;//mudar para web_service_teste caso estiver testando
-                var address = new EndpointAddress(urlServicoEnvio);
-                var binding = new BasicHttpsBinding();  //Disponível desde .NET Framework 4.5
-                                                        // ou:
-                                                        //var binding = new BasicHttpBinding(BasicHttpsSecurityMode.Transport);
+                var address = new EndpointAddress(web_service_producao);
+                var binding = new BasicHttpsBinding();  
                 binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
-                var wsClient = new WsEnviarProducao.ServicoEnviarLoteEventos();//WsEnviarRestrira.ServicoEnviarLoteEventos() // para teste
+                var wsClient = new WsEnviarProducao.ServicoEnviarLoteEventos();
+                wsClient.ClientCertificates.Add(certificado);
+
+                var retornoEnvioXElement = wsClient.EnviarLoteEventos(xml.DocumentElement);
+                return retornoEnvioXElement.InnerXml;
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static string enviarRequisicaoAmbienteRestrito(string data, X509Certificate2 certificado)
+        {
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(data);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                var address = new EndpointAddress(web_service_teste);
+                var binding = new BasicHttpsBinding();
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+
+                var wsClient = new WsEnviarRestrira.ServicoEnviarLoteEventos();
                 wsClient.ClientCertificates.Add(certificado);
 
                 var retornoEnvioXElement = wsClient.EnviarLoteEventos(xml.DocumentElement);
@@ -67,12 +66,18 @@ namespace WebServices.Esocial
         }
         //metodos públicos
 
-        public static string processar_eventos(XmlDocument eventos_assinados, X509Certificate2 certificado)
+        public static string processar_eventos(XmlDocument eventos_assinados, X509Certificate2 certificado, int ambiente_documento)
         {
             try
             {
                 string envelope = envolope_eventos(eventos_assinados);
-                string respostaServidor = enviarRequisicao(envelope, certificado);
+                string respostaServidor = "";
+                if (ambiente_documento == 1)
+                    respostaServidor = enviarRequisicaoAmbienteProducao(envelope, certificado);
+                else if (ambiente_documento == 2 || ambiente_documento == 3)
+                    respostaServidor = enviarRequisicaoAmbienteRestrito(envelope, certificado);
+                else
+                    throw new Exception("ambiente do esocial desconhecido ao processar nota");
                 return respostaServidor;
             }
             catch (Exception e)
