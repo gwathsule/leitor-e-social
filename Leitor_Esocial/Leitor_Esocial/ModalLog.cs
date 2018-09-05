@@ -28,7 +28,7 @@ namespace Leitor_Esocial
 
         private void atualizaTexto()
         {
-            string appDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"AssinadorESocial");
+            string appDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Contando");
             string pasta_logs = appDir + "\\log_processos\\" + this.nome_processo + "\\";
             DateTime hoje = DateTime.Now;
             string nome_file = hoje.Day.ToString() + "-" + hoje.Month.ToString() + "-" + hoje.Year.ToString() + ".log";

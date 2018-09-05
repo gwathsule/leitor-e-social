@@ -15,7 +15,7 @@ namespace DataBase.dao
         //private const string senha_bd = "OnContabil#2018";
         private const int versao_atual = 1;
 
-        private string pasta_db = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"AssinadorESocial") + @"\database";
+        private string pasta_db = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Contando") + @"\database";
         private string path;
         private string str_conn;
         public SQLiteConnection Conector { get; private set; }

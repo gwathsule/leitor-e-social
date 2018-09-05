@@ -25,7 +25,7 @@ namespace Bilbliotecas.modelo
         {
             if (this.Pasta_logs == null)
             {
-                string appDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"AssinadorESocial");
+                string appDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Contando");
                 this.Pasta_logs = appDir + "\\log_processos\\" + this.Processo + "\\";
             }
 

@@ -226,7 +226,7 @@
             // icon_principal
             // 
             this.icon_principal.Icon = ((System.Drawing.Icon)(resources.GetObject("icon_principal.Icon")));
-            this.icon_principal.Text = "OnContabil";
+            this.icon_principal.Text = "Leitror Contando";
             this.icon_principal.Visible = true;
             this.icon_principal.DoubleClick += new System.EventHandler(this.icon_principal_DoubleClick);
             // 
