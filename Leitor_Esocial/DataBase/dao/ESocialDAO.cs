@@ -141,6 +141,19 @@ namespace DataBase.dao
             }
         }
 
+        public static void limparNotasUser(int user_id)
+        {
+            string sql_delete =
+                "DELETE FROM ESocial " +
+                "WHERE id_user = " + user_id;
+
+            using (Conexao bd = new Conexao())
+            {
+                SQLiteCommand cmd = new SQLiteCommand(sql_delete, bd.Conector);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public static void novo(int id_servidor, int id_empresa, int status, int ambiente, DateTime data, string xml_base64, int user_id)
         {
             try

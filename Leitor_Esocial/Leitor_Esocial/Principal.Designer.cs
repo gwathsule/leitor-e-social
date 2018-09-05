@@ -42,15 +42,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btn_cnf_certificado = new System.Windows.Forms.Button();
             this.eSocialDataGrid = new System.Windows.Forms.DataGridView();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_login = new System.Windows.Forms.Button();
             this.icon_principal = new System.Windows.Forms.NotifyIcon(this.components);
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel10 = new System.Windows.Forms.Panel();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.data = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btn_limpar_notas = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAjuda)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFechar)).BeginInit();
@@ -109,7 +110,7 @@
             this.pnNFeEntrada.Controls.Add(this.btn_login);
             this.pnNFeEntrada.Location = new System.Drawing.Point(8, 39);
             this.pnNFeEntrada.Name = "pnNFeEntrada";
-            this.pnNFeEntrada.Size = new System.Drawing.Size(347, 431);
+            this.pnNFeEntrada.Size = new System.Drawing.Size(347, 428);
             this.pnNFeEntrada.TabIndex = 3;
             // 
             // lbl_status_sincronizador
@@ -192,6 +193,26 @@
             this.eSocialDataGrid.Size = new System.Drawing.Size(345, 337);
             this.eSocialDataGrid.TabIndex = 3;
             // 
+            // id
+            // 
+            this.id.HeaderText = "ID";
+            this.id.Name = "id";
+            this.id.ReadOnly = true;
+            // 
+            // data
+            // 
+            this.data.HeaderText = "DATA";
+            this.data.Name = "data";
+            this.data.ReadOnly = true;
+            this.data.Width = 120;
+            // 
+            // status
+            // 
+            this.status.HeaderText = "STATUS";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 120;
+            // 
             // btn_login
             // 
             this.btn_login.Location = new System.Drawing.Point(181, 57);
@@ -214,15 +235,15 @@
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(2, 470);
+            this.panel4.Size = new System.Drawing.Size(2, 500);
             this.panel4.TabIndex = 44;
             // 
             // panel8
             // 
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.panel8.Location = new System.Drawing.Point(0, 468);
+            this.panel8.Location = new System.Drawing.Point(0, 499);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(821, 2);
+            this.panel8.Size = new System.Drawing.Size(358, 2);
             this.panel8.TabIndex = 44;
             // 
             // panel9
@@ -230,7 +251,7 @@
             this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(821, 2);
+            this.panel9.Size = new System.Drawing.Size(358, 2);
             this.panel9.TabIndex = 45;
             // 
             // panel10
@@ -238,35 +259,26 @@
             this.panel10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.panel10.Location = new System.Drawing.Point(356, 0);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(10, 470);
+            this.panel10.Size = new System.Drawing.Size(2, 500);
             this.panel10.TabIndex = 46;
             // 
-            // id
+            // btn_limpar_notas
             // 
-            this.id.HeaderText = "ID";
-            this.id.Name = "id";
-            this.id.ReadOnly = true;
-            // 
-            // data
-            // 
-            this.data.HeaderText = "DATA";
-            this.data.Name = "data";
-            this.data.ReadOnly = true;
-            this.data.Width = 120;
-            // 
-            // status
-            // 
-            this.status.HeaderText = "STATUS";
-            this.status.Name = "status";
-            this.status.ReadOnly = true;
-            this.status.Width = 120;
+            this.btn_limpar_notas.Location = new System.Drawing.Point(246, 471);
+            this.btn_limpar_notas.Name = "btn_limpar_notas";
+            this.btn_limpar_notas.Size = new System.Drawing.Size(98, 23);
+            this.btn_limpar_notas.TabIndex = 47;
+            this.btn_limpar_notas.Text = "Limpar Fila";
+            this.btn_limpar_notas.UseVisualStyleBackColor = true;
+            this.btn_limpar_notas.Click += new System.EventHandler(this.btn_limpar_notas_Click);
             // 
             // Principal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(358, 470);
+            this.ClientSize = new System.Drawing.Size(358, 500);
+            this.Controls.Add(this.btn_limpar_notas);
             this.Controls.Add(this.panel10);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel9);
@@ -310,6 +322,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn id;
         private System.Windows.Forms.DataGridViewTextBoxColumn data;
         private System.Windows.Forms.DataGridViewTextBoxColumn status;
+        private System.Windows.Forms.Button btn_limpar_notas;
     }
 }
 

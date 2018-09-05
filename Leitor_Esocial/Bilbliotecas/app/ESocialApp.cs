@@ -114,6 +114,18 @@ namespace Bilbliotecas.app
             }
         }
 
+        internal static void limparNotasUser(int user_id)
+        {
+            try
+            {
+                ESocialDAO.limparNotasUser(user_id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public static string base64Encode(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);

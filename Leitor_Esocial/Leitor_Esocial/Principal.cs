@@ -178,11 +178,8 @@ namespace Leitor_Esocial
                 }
                 else
                 {
-                    if (processo.user.Id_servidor != this.user_control.User_logado.Id_servidor)
-                    {
-                        try { processo.Thread.Abort(); } catch (Exception) { }
-                        processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
-                    }
+                    try { processo.Thread.Abort(); } catch (Exception) { }
+                    processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
                 }
                 lbl_status_sincronizador.Text = "em execução";
             }catch(Exception ex)
@@ -316,6 +313,19 @@ namespace Leitor_Esocial
         private void btnAjuda_Click(object sender, EventArgs e)
         {
             this.modal_log.ShowDialog();
+        }
+
+        private void btn_limpar_notas_Click(object sender, EventArgs e)
+        {
+            if (this.user_control.User_logado == null)
+            {
+                MessageBox.Show("usuário deve estar logado");
+                return;
+            } else
+            {
+                user_control.limparNotasUser(this.user_control.User_logado.Id);
+                atualizarTabela();
+            }
         }
     }
 }

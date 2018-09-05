@@ -101,5 +101,10 @@ namespace Bilbliotecas.controlador
                 throw ex;
             }
         }
+
+        public void limparNotasUser(int user_id)
+        {
+            ESocialApp.limparNotasUser(user_id);
+        }
     }
 }
