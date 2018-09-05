@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServices", "WebServices\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase", "DataBase\DataBase.csproj", "{9268E553-0307-447E-A966-ED23A52104BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomActions", "CustomActions\CustomActions.csproj", "{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,18 @@ Global
 		{9268E553-0307-447E-A966-ED23A52104BA}.Release|x64.Build.0 = Release|Any CPU
 		{9268E553-0307-447E-A966-ED23A52104BA}.Release|x86.ActiveCfg = Release|Any CPU
 		{9268E553-0307-447E-A966-ED23A52104BA}.Release|x86.Build.0 = Release|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Debug|x64.Build.0 = Debug|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Debug|x86.Build.0 = Debug|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Release|x64.ActiveCfg = Release|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Release|x64.Build.0 = Release|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Release|x86.ActiveCfg = Release|Any CPU
+		{6582DDF5-A4CD-4AB2-ABBC-88ED5901888D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
