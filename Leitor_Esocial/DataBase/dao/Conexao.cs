@@ -149,7 +149,6 @@ namespace DataBase.dao
                 efetuarMigracao(comando_sql, versao_bd);
                 return;
             }
-
             //e por aí vai.. :)
         }
 

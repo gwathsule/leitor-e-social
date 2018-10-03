@@ -96,6 +96,7 @@
     <Compile Include="modelo\ESocial.cs" />
     <Compile Include="modelo\Logs.cs" />
     <Compile Include="modelo\User.cs" />
+    <Compile Include="processos\ConsultaLoteProcesso.cs" />
     <Compile Include="processos\ESocialProcesso.cs" />
     <Compile Include="processos\Processo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

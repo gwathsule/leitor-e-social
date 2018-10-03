@@ -124,7 +124,7 @@ namespace Bilbliotecas.processos
 
                 if (erro == 0)
                 {
-                    ESocialApp.excluirLocal(documento.id);
+                    ESocialApp.marcarComoArmazenadoEmNuvem(documento.id);
                 }
                 count++;
             }
