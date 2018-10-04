@@ -44,5 +44,16 @@ namespace WebServices.Properties {
                 return ((string)(this["WebServices_WsEnviarProducao_ServicoEnviarLoteEventos"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://webservices.consulta.esocial.gov.br/servicos/empregador/consultarloteeven" +
+            "tos/WsConsultarLoteEventos.svc")]
+        public string WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos {
+            get {
+                return ((string)(this["WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos"]));
+            }
+        }
     }
 }

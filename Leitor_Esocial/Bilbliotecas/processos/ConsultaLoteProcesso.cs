@@ -1,9 +1,8 @@
 ﻿using Bilbliotecas.modelo;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using WebServices.Contando;
 
@@ -33,41 +32,33 @@ namespace Bilbliotecas.processos
                 {
                     try
                     {
-                        log.log("Iniciando verificação no webservice");
+                        log.log("Iniciando verificação reposta de eventos na nuvem");
                         string retorno_servidor = contanto_wb.consultarXmlResposta(user.Id_servidor, user.Hash, user.Educont);
-                        //salva os documentos no banco
-                        List<ESocial> documentos_nao_processados = extrairXmlsRetornoServidor(retorno_servidor);
+                        
 
-                        /*
-                        fazer struct
-                        */
+                        JObject json_recebido = JObject.Parse(retorno_servidor);
+                        int erro = (int)json_recebido["erro"];
+                        string retorno = (string)json_recebido["retorno"];
 
+                        log.log("resultado da API: erro = " + erro + " | retorno = " + retorno);
 
-                        if (documentos_nao_processados.Count > 0)
+                        JArray dados = (JArray)json_recebido["dados"];
+
+                        if (dados.Count > 0)
                         {
-                            log.log(documentos_nao_processados.Count + " não processados encontrados. Iniciando processamento");
-                            int doc_processados = processarDocumentosESocial(documentos_nao_processados);
-                            if (doc_processados > 0)
-                                notificao_info(doc_processados + " novos documentos processados");
+                            JObject json_envio = new JObject();
+                            JArray array_envio = new JArray();
+
+                            foreach(JObject documento in dados)
+                            {
+                                int idRegistro = (int)documento["id"];
+                                string xml_envio_receita = base64decode((string)documento["xml"]);
+                            }
                         }
                         else
                         {
                             log.log("nenhum documento novo encontrado");
                         }
-
-                        //pega no máximo 10 xmls processados no banco para envio ao servidor
-                        List<ESocial> documentos_processados = ESocialApp.getDocumentosProcessados(10, user.Id_servidor);
-                        if (documentos_processados.Count > 0)
-                        {
-                            log.log(documentos_processados.Count + " processados encontrados. Iniciando envio à nuvem");
-                            subirDocumentosESocial(documentos_processados);
-                            notificao_info(documentos_processados.Count + " novos documentos enviados ao servidor");
-                        }
-                        else
-                        {
-                            log.log("nenhum novo documento processado encontrado");
-                        }
-
                     }
                     catch (Exception ex)
                     {
@@ -102,11 +93,6 @@ namespace Bilbliotecas.processos
             }
         }
 
-        private List<ESocial> extrairXmlsRetornoServidor(string retorno_servidor)
-        {
-            throw new NotImplementedException();
-        }
-
         private void notificao_erro(string mensagem)
         {
             this.Icone_notificao.ShowBalloonTip(3, "Assinador ESocial", "Erro: " + mensagem, ToolTipIcon.Error);
@@ -115,6 +101,13 @@ namespace Bilbliotecas.processos
         private void notificao_info(string mensagem)
         {
             this.Icone_notificao.ShowBalloonTip(3, "Assinador ESocial", mensagem, ToolTipIcon.Info);
+        }
+
+        private string base64decode(string encodedString)
+        {
+            byte[] data = Convert.FromBase64String(encodedString);
+            string decodedString = Encoding.UTF8.GetString(data);
+            return decodedString;
         }
     }
 }
