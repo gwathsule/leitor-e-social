@@ -16,7 +16,8 @@ namespace Leitor_Esocial
     public partial class Principal : Form
     {
         //variáveis do sistema
-        private ESocialProcesso processo;
+        private ESocialProcesso processo_esocial;
+        private ConsultaLoteProcesso processo_consulta;
         private ModalConfig modal_config;
         private UsersControl user_control;
         private ModalLogin modal_login;
@@ -164,6 +165,8 @@ namespace Leitor_Esocial
         {
             try
             {
+                processo_consulta = new ConsultaLoteProcesso("Consulta lotes", 5, this.icon_principal, this.user_control.User_logado);
+
                 if (this.user_control.User_logado == null || this.user_control.User_logado.Certificado == null)
                 {
                     lbl_status_sincronizador.Text = "desligado";
@@ -172,15 +175,26 @@ namespace Leitor_Esocial
 
                 atualizarTabela();
 
-                if (processo == null)
+                if (processo_esocial == null)
                 {
-                    processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
+                    processo_esocial = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
                 }
                 else
                 {
-                    try { processo.Thread.Abort(); } catch (Exception) { }
-                    processo = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
+                    try { processo_esocial.Thread.Abort(); } catch (Exception) { }
+                    processo_esocial = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
                 }
+
+                if (processo_consulta == null)
+                {
+                    processo_consulta = new ConsultaLoteProcesso("Consulta lotes", 5, this.icon_principal, this.user_control.User_logado);
+                }
+                else
+                {
+                    try { processo_consulta.Thread.Abort(); } catch (Exception) { }
+                    processo_consulta = new ConsultaLoteProcesso("Consulta lotes", 5, this.icon_principal, this.user_control.User_logado);
+                }
+
                 lbl_status_sincronizador.Text = "em execução";
             }catch(Exception ex)
             {

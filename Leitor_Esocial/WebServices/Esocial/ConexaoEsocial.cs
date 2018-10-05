@@ -19,6 +19,9 @@ namespace WebServices.Esocial
         private const string web_service_producao =
             "https://webservices.envio.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
 
+        private const string web_service_consulta_lote =
+            "https://webservices.consulta.esocial.gov.br/servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc";
+
         private static string enviarRequisicaoAmbienteProducao(string data, X509Certificate2 certificado)
         {
             try
@@ -66,6 +69,23 @@ namespace WebServices.Esocial
         }
         //metodos públicos
 
+        public static string consultarLoteEventos(string protocolo_envio, X509Certificate2 certificado)
+        {
+            string envelope = envelope_consultar_eventos(protocolo_envio);
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(envelope);
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            var address = new EndpointAddress(web_service_consulta_lote);
+            var binding = new BasicHttpsBinding();
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+
+            var wsClient = new WsConsultarLoteEventos1.ServicoConsultarLoteEventos();
+            wsClient.ClientCertificates.Add(certificado);
+
+            var retornoEnvioXElement = wsClient.ConsultarLoteEventos(xml.DocumentElement);
+            return retornoEnvioXElement.InnerXml;
+        }
+
         public static string processar_eventos(XmlDocument eventos_assinados, X509Certificate2 certificado, int ambiente_documento)
         {
             try
@@ -105,5 +125,26 @@ namespace WebServices.Esocial
 
             return envelope_env;
         }
+
+        private static string envelope_consultar_eventos(string protocolo_envio)
+        {
+            string envelope_env = "";
+
+            envelope_env += "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.esocial.gov.br/servicos/empregador/lote/eventos/envio/consulta/retornoProcessamento/v1_1_0\">";
+            envelope_env += "<soapenv:Header/>";
+            envelope_env += "<soapenv:Body>";
+            envelope_env += "<v1:ConsultarLoteEventos>";
+            envelope_env += "<eSocial xmlns=\"http://www.esocial.gov.br/schema/lote/eventos/envio/consulta/retornoProcessamento/v1_0_0\">";
+            envelope_env += "<consultaLoteEventos>";
+            envelope_env += "<protocoloEnvio>" + protocolo_envio + "</protocoloEnvio>";
+            envelope_env += "</consultaLoteEventos>";
+            envelope_env += "</eSocial>";
+            envelope_env += "</v1:ConsultarLoteEventos>";
+            envelope_env += "</soapenv:Body>";
+            envelope_env += "</soapenv:Envelope>";
+
+            return envelope_env;
+        }
+
     }
 }

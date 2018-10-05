@@ -50,9 +50,9 @@ namespace WebServices.Properties {
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
         [global::System.Configuration.DefaultSettingValueAttribute("https://webservices.consulta.esocial.gov.br/servicos/empregador/consultarloteeven" +
             "tos/WsConsultarLoteEventos.svc")]
-        public string WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos {
+        public string WebServices_WsConsultarLoteEventos1_ServicoConsultarLoteEventos {
             get {
-                return ((string)(this["WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos"]));
+                return ((string)(this["WebServices_WsConsultarLoteEventos1_ServicoConsultarLoteEventos"]));
             }
         }
     }

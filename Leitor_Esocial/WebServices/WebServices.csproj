@@ -78,6 +78,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Web References\WsConsultarLoteEventos1\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <Compile Include="Web References\WsEnviarProducao\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,6 +100,14 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\WsConsultarLoteEventos1\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\WsConsultarLoteEventos1\ServicoConsultarLoteEventos.wsdl" />
+    <None Include="Web References\WsConsultarLoteEventos1\WsConsultarLoteEventos.xsd">
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web References\WsEnviarProducao\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
@@ -135,6 +148,17 @@
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>WebServices_WsEnviarProducao_ServicoEnviarLoteEventos</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="D:\projetos\leitorESocial\WsConsultarLoteEventos.wsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\WsConsultarLoteEventos1\</RelPath>
+      <UpdateFromURL>D:\projetos\leitorESocial\WsConsultarLoteEventos.wsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>WebServices_WsConsultarLoteEventos1_ServicoConsultarLoteEventos</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

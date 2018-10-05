@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace WebServices.WsConsultarLoteEventos {
+namespace WebServices.WsConsultarLoteEventos1 {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -37,7 +37,7 @@ namespace WebServices.WsConsultarLoteEventos {
         
         /// <remarks/>
         public ServicoConsultarLoteEventos() {
-            this.Url = global::WebServices.Properties.Settings.Default.WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos;
+            this.Url = global::WebServices.Properties.Settings.Default.WebServices_WsConsultarLoteEventos1_ServicoConsultarLoteEventos;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;

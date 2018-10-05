@@ -4,17 +4,19 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 using WebServices.Contando;
+using WebServices.Esocial;
 
 namespace Bilbliotecas.processos
 {
-    class ConsultaLoteProcesso : Processo
+    public class ConsultaLoteProcesso : Processo
     {
         private Logs log;
         private ConexaoContando contanto_wb;
         public User user { get; set; }
 
-        public ConsultaLoteProcesso(string nome_processo, int intervalo, NotifyIcon icone_notificacao) : base(nome_processo, intervalo, icone_notificacao)
+        public ConsultaLoteProcesso(string nome_processo, int intervalo, NotifyIcon icone_notificacao, User user) : base(nome_processo, intervalo, icone_notificacao)
         {
             this.user = user;
             this.contanto_wb = new ConexaoContando();
@@ -32,6 +34,9 @@ namespace Bilbliotecas.processos
                 {
                     try
                     {
+                        //apagar
+                        User user = new User();
+                        //
                         log.log("Iniciando verificação reposta de eventos na nuvem");
                         string retorno_servidor = contanto_wb.consultarXmlResposta(user.Id_servidor, user.Hash, user.Educont);
                         
@@ -52,7 +57,12 @@ namespace Bilbliotecas.processos
                             foreach(JObject documento in dados)
                             {
                                 int idRegistro = (int)documento["id"];
-                                string xml_envio_receita = base64decode((string)documento["xml"]);
+                                string protocolo_envio = extrairProtocoloEnvio((string)documento["xml"]);
+                                if(protocolo_envio.Equals("erro") == false)
+                                {
+                                    string resultado = ConexaoEsocial.consultarLoteEventos(protocolo_envio, user.Certificado);
+                                    contanto_wb.//envia o resultado e o id de registro
+                                }
                             }
                         }
                         else
@@ -90,6 +100,22 @@ namespace Bilbliotecas.processos
             {
                 log.log("ERRO CRÍTICO: " + ex.Message);
                 notificao_erro("ERRO CRÍTICO: " + ex.Message);
+            }
+        }
+
+        private string extrairProtocoloEnvio(string xml_bas64)
+        {
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(base64decode(xml_bas64));
+                string protocoloEnvio = xml.GetElementsByTagName("protocoloEnvio").Item(0).InnerText;
+                return protocoloEnvio;
+            }
+            catch(Exception ex)
+            {
+                this.log.log("erro ao carregar xml do servidor: " + ex.Message);
+                return "erro";
             }
         }
 
