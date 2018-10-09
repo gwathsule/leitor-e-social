@@ -8,8 +8,11 @@
     <Setting Name="WebServices_WsEnviarProducao_ServicoEnviarLoteEventos" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">https://webservices.envio.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc</Value>
     </Setting>
-    <Setting Name="WebServices_WsConsultarLoteEventos1_ServicoConsultarLoteEventos" Type="(Web Service URL)" Scope="Application">
+    <Setting Name="WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">https://webservices.consulta.esocial.gov.br/servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc</Value>
+    </Setting>
+    <Setting Name="WebServices_WsConsultarLoteEventosRestrito_ServicoConsultarLoteEventos" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc</Value>
     </Setting>
   </Settings>
 </SettingsFile>

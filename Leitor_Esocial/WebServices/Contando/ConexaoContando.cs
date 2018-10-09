@@ -59,15 +59,11 @@ namespace WebServices.Contando
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Ssl3;
                 WebClient wc = new WebClient();
 
-                /*wc.QueryString.Add("id", id_servidor.ToString());
+                wc.QueryString.Add("id", id_servidor.ToString());
                 wc.QueryString.Add("hash", hash);
                 wc.QueryString.Add("action", action_consultar_xml_resposta);
                 if (educont)
-                    wc.QueryString.Add("educont", "1");*/
-
-                wc.QueryString.Add("id", "101");
-                wc.QueryString.Add("hash", "e9437399bfb68ed926d4767604c8f4e3");
-                wc.QueryString.Add("action", "consultarXmlResposta");
+                    wc.QueryString.Add("educont", "1");
 
                 var data = wc.UploadValues(web_service_xmls, "POST", wc.QueryString);
 
@@ -141,7 +137,7 @@ namespace WebServices.Contando
         }
 
         public string enviarXmlResultado(int id_empresa, string hash, int id_registro_servidor, string xml_resultado_base_64,
-            string reposta_esocial_base64, int ambiente_documento, bool educont)
+            int ambiente_documento, bool educont)
         {
             try
             {

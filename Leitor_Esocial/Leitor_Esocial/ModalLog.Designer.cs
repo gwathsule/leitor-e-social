@@ -30,15 +30,16 @@
         {
             this.btn_atualiza = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.btn_atualiza_consulta = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_atualiza
             // 
             this.btn_atualiza.Location = new System.Drawing.Point(4, 3);
             this.btn_atualiza.Name = "btn_atualiza";
-            this.btn_atualiza.Size = new System.Drawing.Size(357, 23);
+            this.btn_atualiza.Size = new System.Drawing.Size(173, 23);
             this.btn_atualiza.TabIndex = 1;
-            this.btn_atualiza.Text = "Atualizar";
+            this.btn_atualiza.Text = "Atualizar logs Esocial";
             this.btn_atualiza.UseVisualStyleBackColor = true;
             this.btn_atualiza.Click += new System.EventHandler(this.btn_atualiza_Click);
             // 
@@ -51,11 +52,22 @@
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
+            // btn_atualiza_consulta
+            // 
+            this.btn_atualiza_consulta.Location = new System.Drawing.Point(194, 3);
+            this.btn_atualiza_consulta.Name = "btn_atualiza_consulta";
+            this.btn_atualiza_consulta.Size = new System.Drawing.Size(167, 23);
+            this.btn_atualiza_consulta.TabIndex = 3;
+            this.btn_atualiza_consulta.Text = "Atualizar logs Consulta Lotes";
+            this.btn_atualiza_consulta.UseVisualStyleBackColor = true;
+            this.btn_atualiza_consulta.Click += new System.EventHandler(this.btn_atualiza_consulta_Click);
+            // 
             // ModalLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(366, 388);
+            this.Controls.Add(this.btn_atualiza_consulta);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.btn_atualiza);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -70,5 +82,6 @@
         #endregion
         private System.Windows.Forms.Button btn_atualiza;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button btn_atualiza_consulta;
     }
 }

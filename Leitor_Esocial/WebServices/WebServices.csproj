@@ -78,7 +78,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Web References\WsConsultarLoteEventos1\Reference.cs">
+    <Compile Include="Web References\WsConsultarLoteEventosRestrito\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\WsConsultarLoteEventos\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
@@ -101,14 +106,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\WsConsultarLoteEventos1\Reference.map">
+    <None Include="Web References\WsConsultarLoteEventosRestrito\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <None Include="Web References\WsConsultarLoteEventos1\ServicoConsultarLoteEventos.wsdl" />
-    <None Include="Web References\WsConsultarLoteEventos1\WsConsultarLoteEventos.xsd">
-      <SubType>Designer</SubType>
+    <None Include="Web References\WsConsultarLoteEventosRestrito\ServicoConsultarLoteEventos.wsdl" />
+    <None Include="Web References\WsConsultarLoteEventos\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Web References\WsConsultarLoteEventos\ServicoConsultarLoteEventos.wsdl" />
     <None Include="Web References\WsEnviarProducao\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -151,14 +158,25 @@
     </WebReferenceUrl>
     <WebReferenceUrl Include="D:\projetos\leitorESocial\WsConsultarLoteEventos.wsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\WsConsultarLoteEventos1\</RelPath>
+      <RelPath>Web References\WsConsultarLoteEventos\</RelPath>
       <UpdateFromURL>D:\projetos\leitorESocial\WsConsultarLoteEventos.wsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>WebServices_WsConsultarLoteEventos1_ServicoConsultarLoteEventos</CachedSettingsPropName>
+      <CachedSettingsPropName>WebServices_WsConsultarLoteEventos_ServicoConsultarLoteEventos</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="D:\projetos\leitorESocial\WsConsultarLoteEventosRestrito.wsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\WsConsultarLoteEventosRestrito\</RelPath>
+      <UpdateFromURL>D:\projetos\leitorESocial\WsConsultarLoteEventosRestrito.wsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>WebServices_WsConsultarLoteEventosRestrito_ServicoConsultarLoteEventos</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

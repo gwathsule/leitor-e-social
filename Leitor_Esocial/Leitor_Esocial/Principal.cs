@@ -165,8 +165,9 @@ namespace Leitor_Esocial
         {
             try
             {
-                processo_consulta = new ConsultaLoteProcesso("Consulta lotes", 5, this.icon_principal, this.user_control.User_logado);
-
+                //teste
+                //processo_consulta = new ConsultaLoteProcesso("Consulta lotes", 5, this.icon_principal, this.user_control.User_logado);
+                //-------
                 if (this.user_control.User_logado == null || this.user_control.User_logado.Certificado == null)
                 {
                     lbl_status_sincronizador.Text = "desligado";

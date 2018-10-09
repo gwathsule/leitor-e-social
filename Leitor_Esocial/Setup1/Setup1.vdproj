@@ -825,7 +825,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Assinador ESocial"
         "ProductCode" = "8:{6DA7F447-4522-4256-BFE4-BE4C82EC6B38}"
-        "PackageCode" = "8:{EE10E6F2-00C8-44D7-8B38-EE21C4D9F0FC}"
+        "PackageCode" = "8:{3623D34A-EEED-4D6E-A2C3-7759A0D64C0D}"
         "UpgradeCode" = "8:{552FE9C4-A64D-4AE0-94E4-43B1B8BB1C67}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

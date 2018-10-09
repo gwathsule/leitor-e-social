@@ -19,8 +19,11 @@ namespace WebServices.Esocial
         private const string web_service_producao =
             "https://webservices.envio.esocial.gov.br/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
 
-        private const string web_service_consulta_lote =
+        private const string wb_consultar_lote_eventos =
             "https://webservices.consulta.esocial.gov.br/servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc";
+
+        private const string wb_consultar_lote_eventos_restrito =
+            "https://webservices.producaorestrita.esocial.gov.br/servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc";
 
         private static string enviarRequisicaoAmbienteProducao(string data, X509Certificate2 certificado)
         {
@@ -69,17 +72,51 @@ namespace WebServices.Esocial
         }
         //metodos públicos
 
-        public static string consultarLoteEventos(string protocolo_envio, X509Certificate2 certificado)
+        public static string consutarLoteEventos(int ambiente, string protocolo_envio, X509Certificate2 certificado)
+        {
+
+            if(ambiente == 2 || ambiente == 3)
+            {
+                return consultarLoteEventosAmbienteRestrito(protocolo_envio, certificado);
+            }
+            else if (ambiente == 1)
+            {
+                return consultarLoteEventosAmbienteProducao(protocolo_envio, certificado);
+            }
+
+            return "ambiente desconhecido";
+        }
+
+        private static string consultarLoteEventosAmbienteProducao(string protocolo_envio, X509Certificate2 certificado)
         {
             string envelope = envelope_consultar_eventos(protocolo_envio);
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(envelope);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
-            var address = new EndpointAddress(web_service_consulta_lote);
+            var address = new EndpointAddress(wb_consultar_lote_eventos);
             var binding = new BasicHttpsBinding();
             binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
 
-            var wsClient = new WsConsultarLoteEventos1.ServicoConsultarLoteEventos();
+            var wsClient = new WsConsultarLoteEventos.ServicoConsultarLoteEventos();
+            wsClient.ClientCertificates.Add(certificado);
+
+            var retornoEnvioXElement = wsClient.ConsultarLoteEventos(xml.DocumentElement);
+            return retornoEnvioXElement.InnerXml;
+        }
+
+
+
+        private static string consultarLoteEventosAmbienteRestrito(string protocolo_envio, X509Certificate2 certificado)
+        {
+            string envelope = envelope_consultar_eventos(protocolo_envio);
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(envelope);
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+            var address = new EndpointAddress(wb_consultar_lote_eventos_restrito);
+            var binding = new BasicHttpsBinding();
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Certificate;
+
+            var wsClient = new WsConsultarLoteEventosRestrito.ServicoConsultarLoteEventos();
             wsClient.ClientCertificates.Add(certificado);
 
             var retornoEnvioXElement = wsClient.ConsultarLoteEventos(xml.DocumentElement);
@@ -134,11 +171,13 @@ namespace WebServices.Esocial
             envelope_env += "<soapenv:Header/>";
             envelope_env += "<soapenv:Body>";
             envelope_env += "<v1:ConsultarLoteEventos>";
-            envelope_env += "<eSocial xmlns=\"http://www.esocial.gov.br/schema/lote/eventos/envio/consulta/retornoProcessamento/v1_0_0\">";
+            envelope_env += "<v1:consulta>";
+            envelope_env += "<eSocial xmlns=\"http://www.esocial.gov.br/schema/lote/eventos/envio/consulta/retornoProcessamento/v1_0_0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">";
             envelope_env += "<consultaLoteEventos>";
-            envelope_env += "<protocoloEnvio>" + protocolo_envio + "</protocoloEnvio>";
+            envelope_env += "<protocoloEnvio>1.2.201810.0000000000019450396</protocoloEnvio>";
             envelope_env += "</consultaLoteEventos>";
             envelope_env += "</eSocial>";
+            envelope_env += "</v1:consulta>";
             envelope_env += "</v1:ConsultarLoteEventos>";
             envelope_env += "</soapenv:Body>";
             envelope_env += "</soapenv:Envelope>";
