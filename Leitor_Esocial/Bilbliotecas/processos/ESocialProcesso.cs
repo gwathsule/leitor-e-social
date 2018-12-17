@@ -41,19 +41,9 @@ namespace Bilbliotecas.processos
                         log.log("Iniciando verificação no webservice");
                         string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash, user.Educont);
 
-                        //teste 
-                        //string xml_str = File.ReadAllText(@"D:\projetos\leitorESocial\esocial_documentos\assinado-contando.xml");
-                        //xml_str = xml_str.Replace("<v1:", "<");
-                        //xml_str = xml_str.Replace("</v1:", "</");
-                        //xml_str = xml_str.Replace("<V1:", "<");
-                        //xml_str = xml_str.Replace("</V1:", "</");
-                        //XmlDocument xml = new XmlDocument();
-                        //xml.LoadXml(xml_str);
-                        //xml = ESocialControl.retirarAssinaturaAntiga(xml);
-                        //fim teste
-
                         //salva os documentos no banco
-                        List<ESocial> documentos_nao_processados = extrairXmlsRetornoServidor(retorno_servidor);
+                        //List<ESocial> documentos_nao_processados = new List<ESocial>();
+                        List <ESocial> documentos_nao_processados = extrairXmlsRetornoServidor(retorno_servidor);
                         
                         if (documentos_nao_processados.Count > 0)
                         {
@@ -158,13 +148,15 @@ namespace Bilbliotecas.processos
                 XmlDocument resposta = new XmlDocument();
                 //assina e envia documento
                 XmlDocument xml_assinado = ESocialControl.assinarXML(this.user.Certificado, documento.Xml_base64);
+                
                 string resposta_servidor = ConexaoEsocial.processar_eventos(xml_assinado, this.user.Certificado, documento.Ambiente);
                 resposta.LoadXml(resposta_servidor);
 
                 string cdResposta = resposta.GetElementsByTagName("cdResposta").Item(0).InnerText;
                 string descResposta = resposta.GetElementsByTagName("descResposta").Item(0).InnerText;
                 this.log.log("Resposta do servidor: " + cdResposta + " - " + descResposta);
-                ESocialApp.novoDocumentoProcessado(documento, xml_assinado, resposta, this.user.Id);
+                //descomentar antes do deploy
+                //ESocialApp.novoDocumentoProcessado(documento, xml_assinado, resposta, this.user.Id);
                 doc_processado++;
                 count++;
             }

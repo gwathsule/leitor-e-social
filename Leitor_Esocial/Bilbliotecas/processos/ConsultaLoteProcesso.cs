@@ -68,8 +68,8 @@ namespace Bilbliotecas.processos
                                     log.log("processando " + cont++ + " de " + dados.Count);
                                     int idRegistro = (int)documento["id"];
                                     int ambiente = (int)documento["ambiente"];
-                                    string protocolo_envio = extrairProtocoloEnvio((string)documento["xml"]);
-
+                                    //string protocolo_envio = extrairProtocoloEnvio((string)documento["xml"]);
+                                    string protocolo_envio = "1.2.201812.0000000000047503996";
                                     if (protocolo_envio.Equals("erro") == false)
                                     {
                                         log.log("Protocolo encontrado: '" + protocolo_envio + "', iniciando procura no web service Esocial...");
