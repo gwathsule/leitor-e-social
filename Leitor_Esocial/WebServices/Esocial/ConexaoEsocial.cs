@@ -174,7 +174,7 @@ namespace WebServices.Esocial
             envelope_env += "<v1:consulta>";
             envelope_env += "<eSocial xmlns=\"http://www.esocial.gov.br/schema/lote/eventos/envio/consulta/retornoProcessamento/v1_0_0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">";
             envelope_env += "<consultaLoteEventos>";
-            envelope_env += "<protocoloEnvio>1.2.201810.0000000000019450396</protocoloEnvio>";
+            envelope_env += "<protocoloEnvio>" + protocolo_envio + "</protocoloEnvio>";
             envelope_env += "</consultaLoteEventos>";
             envelope_env += "</eSocial>";
             envelope_env += "</v1:consulta>";

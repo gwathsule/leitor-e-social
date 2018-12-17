@@ -18,7 +18,6 @@ namespace Bilbliotecas.controlador
         {
             try
             {
-
                 byte[] data = Convert.FromBase64String(xml_base64);
                 string xml_str = Encoding.UTF8.GetString(data);
 
@@ -43,6 +42,8 @@ namespace Bilbliotecas.controlador
         {
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(envelope_evento);
+
+            xml = retirarAssinaturaAntiga(xml);
 
             XmlNodeList list_eSocial = xml.GetElementsByTagName("eSocial");
             int i = 0;
@@ -96,6 +97,18 @@ namespace Bilbliotecas.controlador
             {
                 throw new Exception("Certificado digital ausente ou vencido");
             }
+        }
+
+        //retira a assinatura antiga do xml caso exista
+        public static XmlDocument retirarAssinaturaAntiga(XmlDocument xml)
+        {
+            if(xml.GetElementsByTagName("Signature").Item(0) != null)
+            {
+                XmlNode node = xml.GetElementsByTagName("Signature")[0];
+                XmlNode doc = xml.GetElementsByTagName("eSocial")[1].RemoveChild(node);
+                return xml;
+            }
+            return xml;
         }
     }
 }

@@ -4,6 +4,7 @@ using Bilbliotecas.modelo;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
@@ -39,6 +40,18 @@ namespace Bilbliotecas.processos
                     {
                         log.log("Iniciando verificação no webservice");
                         string retorno_servidor = contanto_wb.consultarXmls(user.Id_servidor, user.Hash, user.Educont);
+
+                        //teste 
+                        //string xml_str = File.ReadAllText(@"D:\projetos\leitorESocial\esocial_documentos\assinado-contando.xml");
+                        //xml_str = xml_str.Replace("<v1:", "<");
+                        //xml_str = xml_str.Replace("</v1:", "</");
+                        //xml_str = xml_str.Replace("<V1:", "<");
+                        //xml_str = xml_str.Replace("</V1:", "</");
+                        //XmlDocument xml = new XmlDocument();
+                        //xml.LoadXml(xml_str);
+                        //xml = ESocialControl.retirarAssinaturaAntiga(xml);
+                        //fim teste
+
                         //salva os documentos no banco
                         List<ESocial> documentos_nao_processados = extrairXmlsRetornoServidor(retorno_servidor);
                         
@@ -138,6 +151,7 @@ namespace Bilbliotecas.processos
             int count = 1;
             int max = documentos.Count;
             int doc_processado = 0;
+
             foreach(ESocial documento in documentos)
             {
                 this.log.log("Processando " + count + " de " + max +"...");
