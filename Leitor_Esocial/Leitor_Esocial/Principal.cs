@@ -186,6 +186,7 @@ namespace Leitor_Esocial
                     processo_esocial = new ESocialProcesso("Processo ESocial", 5, this.icon_principal, this.user_control.User_logado);
                 }
 
+                //descomentar após o teste
                 if (processo_consulta == null)
                 {
                     processo_consulta = new ConsultaLoteProcesso("Consulta lotes", 5, this.icon_principal, this.user_control.User_logado);

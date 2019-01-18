@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography.Xml;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace Bilbliotecas.controlador
 {
@@ -26,9 +21,22 @@ namespace Bilbliotecas.controlador
                 xml_str = xml_str.Replace("<V1:", "<");
                 xml_str = xml_str.Replace("</V1:", "</");
 
-                XmlDocument xml_assinado = assinarEsocial(certificado, xml_str);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xml_str);
 
-                return xml_assinado;
+                List<XmlDocument> eventos = assinarEsocial(certificado, doc);
+                XmlNodeList lista_eventos = doc.GetElementsByTagName("evento");
+
+                for (int i = 0; i < eventos.Count; i++)
+                {
+                    XmlNode node = lista_eventos.Item(i);
+                    XmlDocument evento = eventos[i];
+
+                    node.RemoveChild(node.FirstChild);
+                    node.InnerXml = evento.InnerXml;
+                }
+
+                return doc;
             } catch (Exception ex)
             {
                 throw ex;
@@ -38,66 +46,36 @@ namespace Bilbliotecas.controlador
         /// <summary>
         /// Utiliza o certificado digital do cliente para assinar as tags "infEvento" do xml passado como parametro
         /// </summary>
-        private static XmlDocument assinarEsocial(X509Certificate2 certificado, string envelope_evento)
+        private static List<XmlDocument> assinarEsocial(X509Certificate2 certificado, XmlDocument xml_nao_assinado)
         {
-            XmlDocument xml = new XmlDocument();
-            xml.LoadXml(envelope_evento);
+            List<XmlDocument> eventos = new List<XmlDocument>();
+            xml_nao_assinado = retirarAssinaturaAntiga(xml_nao_assinado);
+            XmlNodeList lista_eventos = xml_nao_assinado.GetElementsByTagName("evento");
 
-            xml = retirarAssinaturaAntiga(xml);
-
-            XmlNodeList list_eSocial = xml.GetElementsByTagName("eSocial");
-            int i = 0;
-
+            //percorre as tags eventos
             if (certificado.HasPrivateKey && certificado.NotAfter > DateTime.Now && certificado.NotBefore < DateTime.Now)
             {
-                foreach (XmlElement eSocial in list_eSocial)
+                foreach (XmlElement evento in lista_eventos)
                 {
-                    if(i > 0)
-                    {
-                        string id = eSocial.FirstChild.Attributes["Id"].Value;
+                    XmlDocument evento_separado = new XmlDocument();
+                    evento_separado.LoadXml(evento.OuterXml);
 
-                        SignedXml signedXml = new SignedXml(eSocial);
-                        signedXml.SigningKey = certificado.PrivateKey;
+                    XmlDocument esocial = new XmlDocument();
+                    esocial.LoadXml(evento_separado.FirstChild.InnerXml);
 
-                        Reference reference = new Reference(string.Empty);
-                        reference.AddTransform(new XmlDsigEnvelopedSignatureTransform());
-                        reference.AddTransform(new XmlDsigC14NTransform());
-                        signedXml.AddReference(reference);
-                        signedXml.ComputeSignature();
+                    XmlSignatureExtensions.signDocument(esocial, "", certificado);
 
-                        //inclui cláusula com os dados do certificado
-                        KeyInfo keyInfo = new KeyInfo();
-                        keyInfo.AddClause(new KeyInfoX509Data(certificado));
-                        signedXml.KeyInfo = keyInfo;
-
-                        signedXml.ComputeSignature();
-
-                        XmlElement xmlKeyInfo = signedXml.KeyInfo.GetXml();
-                        XmlElement xmlSignature = xml.CreateElement("Signature", "http://www.w3.org/2000/09/xmldsig#");
-                        XmlElement xmlSignedInfo = signedXml.SignedInfo.GetXml();
-
-                        xmlSignature.AppendChild(xml.ImportNode(xmlSignedInfo, true));
-
-                        XmlElement xmlSignatureValue = xml.CreateElement("SignatureValue", xmlSignature.NamespaceURI);
-                        string signBase64 = Convert.ToBase64String(signedXml.Signature.SignatureValue);
-                        XmlText text = xml.CreateTextNode(signBase64);
-                        xmlSignatureValue.AppendChild(text);
-                        xmlSignature.AppendChild(xmlSignatureValue);
-
-                        xmlSignature.AppendChild(xml.ImportNode(xmlKeyInfo, true));
-
-                        eSocial.AppendChild(xmlSignature);
-                    }
-                    i++;
+                    eventos.Add(esocial);
                 }
-
-                return xml;
             }
             else
             {
                 throw new Exception("Certificado digital ausente ou vencido");
             }
+
+            return eventos;
         }
+
 
         //retira a assinatura antiga do xml caso exista
         public static XmlDocument retirarAssinaturaAntiga(XmlDocument xml)
